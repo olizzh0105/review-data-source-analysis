@@ -1,2 +1,10 @@
-# review-data-source-assessment
-Assessment of Amazon, Google Play Store, and Apple App Store as potential review-data sources for recurring sentiment analysis workflows.
+# Review Data Source Assessment
+
+This project evaluates Amazon, Google Play Store, and Apple App Store
+as potential sources for recurring review-data collection and sentiment analysis.
+
+## Objectives
+- Compare business value
+- Assess technical feasibility
+- Identify limitations
+- Recommend the most suitable data source
