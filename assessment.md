@@ -142,6 +142,35 @@ Finally, review moderation and removal may cause the available dataset to change
 
 Overall, these limitations do not eliminate the business value of Amazon reviews, but they should be considered when interpreting sentiment-analysis results.
 
+### 4.2 Technical / Practical Perspective
+
+#### Public Accessibility
+
+Amazon customer reviews are visible through public product pages, making the data observable without requiring access to a private internal database.
+
+However, public visibility does not necessarily mean that the data is easy or appropriate to collect automatically at scale. The feasibility of automated collection must therefore be evaluated separately from simple browser accessibility.
+
+**Assessment: Medium**
+
+#### Official API Availability
+
+Amazon provides programmatic access to product catalog information through its Creators API.
+
+However, the currently documented Creators API resources focus on information such as:
+
+- Product information
+- Images
+- Offers
+- Product variations
+- Browse nodes
+- Search refinements
+
+Customer review text is not listed as a supported resource in the current Creators API documentation.
+
+This means that the official product API does not appear to provide a straightforward method for retrieving large volumes of customer review text for this use case.
+
+**Assessment: Low**
+
 ## 5. Google Play Store
 
 ## 6. Apple App Store
