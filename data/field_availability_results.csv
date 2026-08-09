@@ -1,0 +1,4 @@
+platform,review,review_count,rating,rating_count,date,date_count,version,version_count,author,author_count,helpful,helpful_count
+Google Play,True,11,True,3,True,3,True,1,False,0,True,6
+Apple App Store,True,1,True,10,True,34,True,2,False,0,False,0
+Amazon,True,4,False,0,True,6,True,1,False,0,False,0

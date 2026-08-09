@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 urls = {
     "Google Play": "https://play.google.com/store/apps/details?id=com.spotify.music",
     "Apple App Store": "https://apps.apple.com/us/app/spotify-music-and-podcasts/id324684580",
-    "Amazon": "PASTE_YOUR_AMAZON_PRODUCT_URL_HERE"
+    "Amazon": "https://www.amazon.com/Amazon-vibrant-helpful-routines-Charcoal/dp/B09B8V1LZ3"
 }
 
 headers = {
@@ -23,7 +23,7 @@ for platform, url in urls.items():
             timeout=10
         )
 
-        soup = BeautifulSoup(response.text, "html.parser")
+        soup = BeautifulSoup(response.content, "html.parser")
 
         title = soup.title.get_text(strip=True) if soup.title else "Not found"
 
@@ -57,5 +57,59 @@ print(df)
 
 df.to_csv(
     "data/practical_test_results.csv",
+    index=False
+)
+
+# --------------------------------------------------
+# Review-related field availability test
+# --------------------------------------------------
+
+print("\nReview-related Field Test")
+
+keywords = [
+    "review",
+    "rating",
+    "date",
+    "version",
+    "author",
+    "helpful"
+]
+
+field_results = []
+
+for platform, url in urls.items():
+
+    try:
+        response = requests.get(
+            url,
+            headers=headers,
+            timeout=10
+        )
+
+        # Use response content directly to reduce encoding issues
+        soup = BeautifulSoup(response.content, "html.parser")
+        html = soup.get_text(" ", strip=True).lower()
+
+        result = {
+            "platform": platform
+        }
+
+        for keyword in keywords:
+            result[keyword] = keyword in html
+            result[f"{keyword}_count"] = html.count(keyword)
+
+        field_results.append(result)
+
+    except Exception as e:
+        print(f"{platform}: {e}")
+
+
+field_df = pd.DataFrame(field_results)
+
+print("\nField Availability Results")
+print(field_df.to_string(index=False))
+
+field_df.to_csv(
+    "data/field_availability_results.csv",
     index=False
 )

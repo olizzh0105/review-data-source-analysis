@@ -1,0 +1,4 @@
+platform,status_code,page_size,page_title,contains_review_word
+Google Play,200,1336470,Spotify: Music and Podcasts - Apps on Google Play,True
+Apple App Store,200,760017,‎Spotify: Music and Podcasts App - App Store,True
+Amazon,200,3781,Amazon.com,False
