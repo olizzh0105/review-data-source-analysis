@@ -171,6 +171,75 @@ This means that the official product API does not appear to provide a straightfo
 
 **Assessment: Low**
 
+#### Data Structure and Repeatability
+
+Amazon product and review pages generally follow recognizable layouts, which suggests that review information may be technically identifiable from public-facing pages.
+
+However, a recurring data ingestion workflow would require more than identifying individual fields. The system would need to consistently handle:
+
+- Multiple products
+- Multiple review pages
+- Pagination
+- Changes in page structure
+- Missing or inconsistent review fields
+- Request failures or access restrictions
+
+Therefore, the repeatability of large-scale collection cannot be assumed based only on manual browser access.
+
+A small practical test will be conducted to better understand the accessibility and structure of the review data.
+
+**Assessment: To be validated through testing**
+
+#### Restrictions and Operational Risk
+
+Amazon appears less suitable for unrestricted automated collection than the two app-store alternatives.
+
+Because customer review text is not directly exposed as a standard resource through the current Creators API, a recurring workflow may have to depend more heavily on public-web collection.
+
+This introduces additional concerns related to:
+
+- Platform terms and acceptable-use requirements
+- Automated-access restrictions
+- Changes in webpage structure
+- Potential anti-automation mechanisms
+- Long-term maintenance requirements
+
+Any production-scale implementation would therefore require a more detailed review of Amazon's applicable terms and approved data-access methods before automated collection is implemented.
+
+**Assessment: Low to Medium**
+
+#### Suitability for a Recurring Workflow
+
+Amazon has very high business value but lower technical practicality for the proposed recurring ingestion system.
+
+The data itself could support sophisticated sentiment and product analysis, but reliable long-term collection may require significantly more engineering effort and platform-specific maintenance than other sources.
+
+Therefore, Amazon may be better suited as a future or supplementary data source rather than the initial source used to prototype the ingestion workflow.
+
+**Assessment: Low to Medium**
+
+### 4.3 Overall Assessment
+
+| Criterion | Amazon Assessment |
+|---|---|
+| Review Relevance | High |
+| Review Richness | Very High |
+| Product Coverage | Very High |
+| Metadata Richness | High |
+| Analytical Potential | Very High |
+| Public Accessibility | Medium |
+| Official Review API Accessibility | Low |
+| Repeatability | To be validated |
+| Recurring Workflow Suitability | Low to Medium |
+
+### Preliminary Conclusion
+
+Amazon is arguably the strongest of the three sources from a business-data perspective because of its broad product coverage and rich customer feedback. The review text could support detailed sentiment analysis, pain-point identification, and product-level comparisons.
+
+However, Amazon appears less attractive from a technical and operational perspective. The current official Creators API focuses primarily on product catalog information rather than customer review text, meaning that recurring review collection may require a more complex public-web approach.
+
+For this reason, Amazon should remain an important candidate, but it may not be the best source for the initial implementation of a simple and maintainable recurring ingestion workflow.
+
 ## 5. Google Play Store
 
 ## 6. Apple App Store
