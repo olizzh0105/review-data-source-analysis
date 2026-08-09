@@ -242,7 +242,478 @@ For this reason, Amazon should remain an important candidate, but it may not be 
 
 ## 5. Google Play Store
 
+### 5.1 Business Perspective
+
+#### Review Relevance
+
+Google Play reviews provide direct feedback from users about their experiences with Android applications. Users can provide both star ratings and written reviews, making the data useful for understanding customer satisfaction, usability issues, feature preferences, and technical problems.
+
+Because reviews are associated with specific applications, the feedback is particularly relevant for analyzing digital product performance and user experience.
+
+**Assessment: High**
+
+#### Review Richness
+
+Google Play reviews can provide both qualitative and quantitative information.
+
+Useful review information may include:
+
+- Written review text
+- Star rating
+- Review timestamp
+- Reviewer language
+- App version
+- Android OS version
+- Device information
+- Helpful-vote counts
+- Developer response
+
+This combination of written feedback and technical metadata can make Google Play especially useful for identifying whether negative user experiences are associated with a specific app version, operating system, or device.
+
+For example, users may discuss:
+
+- App crashes
+- Login problems
+- Performance
+- User interface
+- Subscription pricing
+- Advertisements
+- New features
+- Battery consumption
+
+This creates strong opportunities for both sentiment analysis and product-level analysis.
+
+**Assessment: Very High**
+
+#### Product Coverage
+
+Google Play contains a large range of Android applications and games across categories such as:
+
+- Entertainment
+- Productivity
+- Finance
+- Healthcare
+- Education
+- Transportation
+- Social media
+- Retail
+- Gaming
+
+However, its product coverage is narrower than Amazon because Google Play primarily represents software applications rather than physical consumer products.
+
+For a project focused on digital products and user experience, this narrower scope may also provide more consistent and comparable feedback.
+
+**Assessment: Medium to High**
+
+#### Metadata Richness
+
+Google Play provides relatively rich review metadata.
+
+Potentially useful fields include:
+
+- Review ID
+- Reviewer name
+- Review text
+- Star rating
+- Review date
+- Reviewer language
+- App version
+- Android version
+- Device information
+- Helpful-vote counts
+
+The availability of app-version and device-related information can support deeper analysis beyond basic positive and negative sentiment classification.
+
+For example, the data could help identify whether negative reviews increased after a specific software update.
+
+**Assessment: Very High**
+
+#### Analytical Potential
+
+Google Play review data could support several types of downstream analysis:
+
+1. **Sentiment Analysis**
+   - Classify reviews as positive, neutral, or negative.
+
+2. **Feature and Pain Point Analysis**
+   - Identify frequently praised or criticized app features.
+
+3. **Version-Level Analysis**
+   - Determine whether user sentiment changes following an app update.
+
+4. **Technical Issue Analysis**
+   - Identify recurring problems such as crashes, bugs, login failures, or performance issues.
+
+5. **Device and OS Analysis**
+   - Examine whether certain problems are concentrated among specific devices or operating-system versions.
+
+6. **Rating vs. Review Analysis**
+   - Compare numerical star ratings with the sentiment expressed in written reviews.
+
+7. **Trend Analysis**
+   - Track changes in user satisfaction and recurring issues over time.
+
+These use cases make Google Play particularly valuable for product analytics and digital customer-experience analysis.
+
+**Assessment: Very High**
+
+#### Business Limitations
+
+Google Play review data also introduces several potential limitations.
+
+First, the platform primarily represents Android applications, making it less suitable for analyzing customer sentiment toward physical products.
+
+Second, users who choose to leave reviews may not represent the full user population, which can introduce selection bias.
+
+Third, review quality varies significantly. Some users provide detailed feedback, while others leave very short comments.
+
+Users may also update their ratings and reviews over time, meaning that individual review records can change.
+
+Overall, these limitations should be considered when interpreting results, but they do not substantially reduce the value of Google Play reviews for application-focused sentiment analysis.
+
+---
+
+### 5.2 Technical / Practical Perspective
+
+#### Public Accessibility
+
+Google Play reviews are publicly visible through application pages.
+
+However, there is an important difference between data being visible to users and data being freely available through an official API.
+
+Google's official developer tools are primarily designed for developers accessing reviews associated with applications they manage.
+
+Therefore, public browser accessibility is relatively high, while automated collection of reviews from arbitrary third-party applications requires additional evaluation.
+
+**Assessment: Medium to High**
+
+#### Official API Availability
+
+Google provides an official review API through the Google Play Developer API.
+
+The API can provide structured review data and supports programmatic retrieval of reviews for applications managed by the developer.
+
+However, it should not be treated as a completely public API for collecting reviews from any application on Google Play.
+
+Important limitations include:
+
+- Authentication is required
+- Access is primarily designed for apps managed by the developer
+- The API focuses on written reviews
+- API quotas and retrieval limitations may apply
+
+Therefore, the official API is highly useful for first-party applications but less useful for unrestricted public or competitor-app review collection.
+
+**Assessment: High for owned apps; Low to Medium for general public apps**
+
+#### Data Structure and Repeatability
+
+For authorized applications, Google Play provides a highly structured and repeatable review format.
+
+The data can potentially support a recurring workflow such as:
+
+`Retrieve reviews -> clean data -> store data -> analyze sentiment`
+
+Structured fields such as rating, review text, date, app version, and device information make the data relatively straightforward to normalize and store in a relational database.
+
+However, the repeatability of collecting reviews from public third-party applications should still be confirmed through practical testing.
+
+**Assessment: High for owned apps; public collection to be validated**
+
+#### Restrictions and Operational Risk
+
+The primary limitation is authorization.
+
+Using Google's official developer tools requires appropriate developer access and permissions.
+
+Additional considerations may include:
+
+- API quotas
+- Authentication requirements
+- Restrictions on accessing third-party applications
+- Changes in public webpage structure
+- Maintenance requirements for public-web collection
+
+Compared with Amazon, Google Play appears to provide a more standardized environment for review data.
+
+**Assessment: Medium**
+
+#### Suitability for a Recurring Workflow
+
+Google Play appears highly suitable for a recurring review workflow when the application is managed by the organization collecting the data.
+
+Its combination of structured review text, ratings, timestamps, app versions, and technical metadata creates strong opportunities for automated analysis.
+
+For public third-party applications, recurring collection feasibility should still be validated through practical testing.
+
+**Assessment: Medium to High**
+
+---
+
+### 5.3 Overall Assessment
+
+| Criterion | Google Play Assessment |
+|---|---|
+| Review Relevance | High |
+| Review Richness | Very High |
+| Product Coverage | Medium to High |
+| Metadata Richness | Very High |
+| Analytical Potential | Very High |
+| Public Accessibility | Medium to High |
+| Official Review API Accessibility | High for owned apps; Low to Medium for public apps |
+| Repeatability | High for owned apps; public collection to be validated |
+| Recurring Workflow Suitability | Medium to High |
+
+### Preliminary Conclusion
+
+Google Play Store provides a strong balance between business value and technical feasibility.
+
+Its major advantage is the richness of its metadata. In addition to written reviews and ratings, review data may include app-version, operating-system, device, language, and helpful-vote information.
+
+This creates opportunities not only for sentiment analysis but also for identifying technical issues, monitoring product updates, and understanding changes in customer experience.
+
+The main limitation is that Google's official developer tools are primarily designed for applications managed by the developer rather than unrestricted public review collection.
+
+Therefore, Google Play currently appears to be a strong candidate for the initial ingestion workflow, but public-data collection feasibility should be confirmed through practical testing before making the final recommendation.
+
+
 ## 6. Apple App Store
+
+### 6.1 Business Perspective
+
+#### Review Relevance
+
+Apple App Store reviews contain direct feedback from users regarding their experiences with applications.
+
+Users can provide numerical ratings and written reviews, creating useful signals about:
+
+- Customer satisfaction
+- Usability
+- Product features
+- Technical issues
+- Pricing
+- Customer expectations
+
+Because reviews are tied to individual applications, they are highly relevant for analyzing digital product performance and customer experience.
+
+**Assessment: High**
+
+#### Review Richness
+
+Apple App Store reviews provide both numerical ratings and written feedback.
+
+Useful review information may include:
+
+- Star rating
+- Review title
+- Review body
+- Reviewer nickname
+- Review date
+- Territory
+
+Written reviews may include feedback about:
+
+- Application usability
+- Performance
+- Bugs and crashes
+- Subscription pricing
+- Feature requests
+- Interface design
+- Recent updates
+- Overall customer experience
+
+The combination of review titles and written review bodies creates useful text for sentiment and topic analysis.
+
+However, Apple generally provides less device-specific metadata than Google Play.
+
+**Assessment: High**
+
+#### Product Coverage
+
+The Apple App Store represents applications across many categories, including:
+
+- Entertainment
+- Finance
+- Healthcare
+- Productivity
+- Education
+- Social networking
+- Gaming
+- Transportation
+- Shopping
+
+Like Google Play, the App Store primarily represents software products rather than physical consumer goods.
+
+Therefore, its product coverage is narrower than Amazon but highly relevant for digital-product analysis.
+
+**Assessment: Medium to High**
+
+#### Metadata Richness
+
+Apple App Store reviews contain several useful structured fields, including:
+
+- Rating
+- Review title
+- Review body
+- Reviewer nickname
+- Review date
+- Territory
+
+The territory field is particularly useful because it may support geographic or market-level comparison.
+
+Review data may also be connected to specific application versions, creating opportunities for analyzing changes in customer feedback over time.
+
+Compared with Google Play, however, Apple provides less detailed device and operating-system metadata through its basic review structure.
+
+**Assessment: High**
+
+#### Analytical Potential
+
+Apple App Store review data could support several types of analysis:
+
+1. **Sentiment Analysis**
+   - Identify positive, neutral, and negative user feedback.
+
+2. **Feature Analysis**
+   - Identify frequently requested or criticized features.
+
+3. **Pain Point Analysis**
+   - Detect recurring usability or technical problems.
+
+4. **Rating vs. Review Analysis**
+   - Compare written sentiment with numerical star ratings.
+
+5. **Territory Analysis**
+   - Compare feedback patterns across geographic markets.
+
+6. **Version-Related Analysis**
+   - Examine whether customer feedback changes following application updates.
+
+7. **Trend Analysis**
+   - Track changes in customer sentiment over time.
+
+These analyses could help product teams understand customer expectations and prioritize product improvements.
+
+**Assessment: Very High**
+
+#### Business Limitations
+
+Apple App Store data is primarily limited to Apple's software ecosystem.
+
+This reduces its usefulness for businesses seeking feedback across physical-product categories.
+
+As with the other platforms, review data may also contain selection bias because users who voluntarily leave reviews may not represent the entire customer population.
+
+Review length and detail can vary significantly, and users may also modify their reviews over time.
+
+In addition, geographic differences may influence ratings and review behavior across different App Store territories.
+
+These factors should be considered when interpreting sentiment-analysis results.
+
+---
+
+### 6.2 Technical / Practical Perspective
+
+#### Public Accessibility
+
+Customer ratings and written reviews are publicly visible through App Store product pages.
+
+However, public visibility does not necessarily mean that the reviews can be freely collected through an official public API.
+
+Apple's official App Store Connect tools are primarily designed for developers managing their own applications.
+
+**Assessment: Medium to High**
+
+#### Official API Availability
+
+Apple provides an official App Store Connect API for retrieving customer reviews associated with applications managed through App Store Connect.
+
+The API provides structured review information and can support automated processing.
+
+However, API access requires authentication and appropriate App Store Connect permissions.
+
+Therefore, the API is useful for first-party application data but should not be considered an unrestricted public API for competitor reviews.
+
+**Assessment: High for owned apps; Low to Medium for general public apps**
+
+#### Data Structure and Repeatability
+
+For authorized applications, Apple provides structured review data that can be integrated relatively easily into an automated workflow.
+
+Fields such as:
+
+- Rating
+- Title
+- Review body
+- Date
+- Territory
+
+can be converted into structured tables and stored for downstream analysis.
+
+A potential recurring workflow could follow the structure:
+
+`Retrieve reviews -> normalize fields -> store data -> analyze sentiment`
+
+However, the repeatability of collecting public reviews from third-party applications should still be confirmed through practical testing.
+
+**Assessment: High for owned apps; public collection to be validated**
+
+#### Restrictions and Operational Risk
+
+The primary technical limitation is authentication and ownership-based access.
+
+Important considerations include:
+
+- API authentication requirements
+- App Store Connect permissions
+- Access primarily to applications managed by the organization
+- Territory-specific data
+- Different collection requirements for third-party applications
+- Potential maintenance requirements for public-web collection
+
+Compared with Amazon, Apple provides a clearer structured review API for developers.
+
+However, its usefulness for an open-web ingestion workflow depends on whether the project requires first-party or third-party review data.
+
+**Assessment: Medium**
+
+#### Suitability for a Recurring Workflow
+
+For applications owned or managed by an organization, Apple App Store review data appears highly suitable for a recurring workflow.
+
+Its structured review attributes can support automated collection, cleaning, storage, and sentiment analysis.
+
+For general public applications, recurring collection feasibility still needs to be validated through practical testing.
+
+**Assessment: Medium to High**
+
+---
+
+### 6.3 Overall Assessment
+
+| Criterion | Apple App Store Assessment |
+|---|---|
+| Review Relevance | High |
+| Review Richness | High |
+| Product Coverage | Medium to High |
+| Metadata Richness | High |
+| Analytical Potential | Very High |
+| Public Accessibility | Medium to High |
+| Official Review API Accessibility | High for owned apps; Low to Medium for public apps |
+| Repeatability | High for owned apps; public collection to be validated |
+| Recurring Workflow Suitability | Medium to High |
+
+### Preliminary Conclusion
+
+Apple App Store is another strong candidate for sentiment-analysis data.
+
+Its major strengths include structured written reviews, numerical ratings, review dates, and territory information. Territory-level data may be particularly useful for comparing customer feedback across different geographic markets.
+
+Compared with Google Play, Apple appears slightly less rich in technical metadata because Google Play may provide additional information related to app versions, operating systems, and devices.
+
+Like Google Play, Apple's main technical limitation is that its official developer API is primarily designed for applications managed by the developer rather than unrestricted public third-party review collection.
+
+Therefore, Apple App Store should currently be considered a strong alternative to Google Play, with the final recommendation depending on practical accessibility and the reliability of recurring data collection.
 
 ## 7. Comparative Assessment
 
