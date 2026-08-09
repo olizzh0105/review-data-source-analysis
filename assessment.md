@@ -715,8 +715,31 @@ Like Google Play, Apple's main technical limitation is that its official develop
 
 Therefore, Apple App Store should currently be considered a strong alternative to Google Play, with the final recommendation depending on practical accessibility and the reliability of recurring data collection.
 
-## 7. Comparative Assessment
+## 7. Practical Testing
 
-## 8. Recommendation
+### 7.1 Manual Browser Test
 
-## 9. Next Steps
+A manual browser test was conducted to evaluate the basic accessibility and visibility of review-related information across the three platforms.
+
+| Test | Amazon | Google Play | Apple App Store |
+|---|---|---|---|
+| Accessible without login | To be tested | To be tested | To be tested |
+| Reviews visible in browser | To be tested | To be tested | To be tested |
+| Rating visible | To be tested | To be tested | To be tested |
+| Review date visible | To be tested | To be tested | To be tested |
+| Reviewer visible | To be tested | To be tested | To be tested |
+| Pagination / More reviews | To be tested | To be tested | To be tested |
+| Structure looks consistent | To be tested | To be tested | To be tested |
+
+### 7.2 Basic Programmatic Accessibility Test
+
+A lightweight Python test was conducted to examine whether public pages from each platform could be retrieved through a basic HTTP request.
+
+Results will be documented after testing.
+
+
+## 8. Comparative Assessment
+
+## 9. Recommendation
+
+## 10. Next Steps
