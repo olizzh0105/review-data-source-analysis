@@ -735,8 +735,35 @@ A manual browser test was conducted to evaluate the basic accessibility and visi
 
 A lightweight Python test was conducted to examine whether public pages from each platform could be retrieved through a basic HTTP request.
 
-Results will be documented after testing.
+The test used Python `requests` to retrieve one representative public page from each platform. The response status code, HTML page size, page title, and presence of review-related content were recorded.
 
+| Platform | Status Code | Page Size | Review-Related Content Detected |
+|---|---:|---:|---|
+| Amazon | 200 | 1,129,258 | Yes |
+| Google Play Store | 200 | 1,336,455 | Yes |
+| Apple App Store | 200 | 760,017 | Yes |
+
+All three platforms successfully returned HTTP status code `200`, indicating that the tested public pages could be retrieved through basic programmatic requests.
+
+Google Play Store returned the largest HTML response at approximately 1.34 million characters, followed by Amazon at approximately 1.13 million and Apple App Store at approximately 0.76 million.
+
+Review-related content was detected in the returned HTML for all three platforms.
+
+Based on this initial test, no major difference in basic HTTP accessibility was observed among Amazon, Google Play Store, and Apple App Store.
+
+However, successful page retrieval does not necessarily mean that individual review records can be extracted easily or consistently. Additional testing is required to evaluate review-field availability and structured review extraction.
+
+### 7.3 Review Field Availability Test
+
+To be completed.
+
+### 7.4 Small Review Extraction Test
+
+To be completed.
+
+### 7.5 Practical Testing Summary
+
+To be completed.
 
 ## 8. Comparative Assessment
 
