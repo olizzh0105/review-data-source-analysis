@@ -755,13 +755,64 @@ However, successful page retrieval does not necessarily mean that individual rev
 
 ### 7.3 Review Field Availability Test
 
+A second lightweight test was conducted to examine whether several review-related keywords were present in the text returned from each platform.
+
+The test searched for the following terms:
+
+- `review`
+- `rating`
+- `date`
+- `version`
+- `author`
+- `helpful`
+
+The purpose of this test was not to confirm successful structured extraction, but to determine whether potentially useful review-related information could be identified in the returned page content.
+
+| Field | Google Play Store | Apple App Store | Amazon |
+|---|---|---|---|
+| Review | Yes | Yes | Yes |
+| Rating | Yes | Yes | No |
+| Date | Yes | Yes | Yes |
+| Version | Yes | Yes | Yes |
+| Author | No | No | No |
+| Helpful | Yes | No | No |
+
+Google Play Store showed the broadest range of review-related fields in the returned page text, including review, rating, date, version, and helpful-related information.
+
+Apple App Store also showed review, rating, date, and version-related information, although author and helpful-related terms were not detected.
+
+Amazon showed fewer identifiable review-related fields during this test. Review, date, and version-related terms were detected, while rating, author, and helpful-related terms were not detected.
+
+These results should be interpreted cautiously. Keyword presence does not confirm that the corresponding field can be reliably extracted for individual review records. A structured extraction test is still required.
+
+### 7.4 Repeatability Observation
+
+An important difference was observed across repeated HTTP tests.
+
+Google Play Store and Apple App Store returned relatively consistent page responses across multiple runs. In contrast, Amazon produced substantially different responses between two tests.
+
+In an earlier test, the Amazon page returned:
+
+- HTTP status code: `200`
+- Page size: approximately `1.13 million` characters
+- Review-related content detected: Yes
+
+In a later test, the same Amazon request returned:
+
+- HTTP status code: `200`
+- Page size: approximately `3,781` characters
+- Page title: `Amazon.com`
+- Review-related content detected: No
+
+This suggests that HTTP status code alone is not sufficient to determine whether the complete Amazon product page has been retrieved.
+
+The variation observed across repeated requests may indicate lower repeatability for a simple public-web collection workflow. Additional testing would be required before relying on Amazon as a stable recurring data source.
+
+### 7.5 Small Review Extraction Test
+
 To be completed.
 
-### 7.4 Small Review Extraction Test
-
-To be completed.
-
-### 7.5 Practical Testing Summary
+### 7.6 Practical Testing Summary
 
 To be completed.
 
