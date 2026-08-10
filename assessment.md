@@ -38,9 +38,8 @@ The three data sources are evaluated from two main perspectives: business value 
 | Criteria | Description |
 |---|---|
 | Public Accessibility | Whether data can be accessed without login |
-| Data Structure | How structured and consistent the available data is |
+| Data Structure | Whether review-related information can be identified and extracted from the returned page content |
 | Repeatability | Whether collection can be repeated consistently |
-| Pagination | Whether large volumes of reviews can be collected |
 | Restrictions | API, scraping, or platform restrictions |
 | Recurring Workflow Suitability | Suitability for ongoing automated collection |
 
