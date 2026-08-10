@@ -103,9 +103,16 @@ These pages were used only for lightweight feasibility testing. The project does
 
 The technical assessment also considers official platform documentation related to programmatic review access:
 
-- Amazon Creators API
-- Google Play Developer API
-- Apple App Store Connect API
+- [Amazon Creators API Documentation](https://affiliate-program.amazon.com/creatorsapi/docs/en-us/introduction)
+- [Amazon Creators API Resources](https://affiliate-program.amazon.com/creatorsapi/docs/en-us/api-reference/resources)
+
+- [Google Play Developer API](https://developers.google.com/android-publisher)
+- [Google Play Reviews Resource](https://developers.google.com/android-publisher/api-ref/rest/v3/reviews)
+- [Google Play Reviews List Method](https://developers.google.com/android-publisher/api-ref/rest/v3/reviews/list)
+
+- [Apple App Store Connect API](https://developer.apple.com/documentation/appstoreconnectapi)
+- [Apple Customer Reviews Documentation](https://developer.apple.com/documentation/appstoreconnectapi/customer-reviews)
+- [Apple Customer Reviews API Endpoint](https://developer.apple.com/documentation/appstoreconnectapi/get-v1-apps-_id_-customerreviews)
 
 ---
 
