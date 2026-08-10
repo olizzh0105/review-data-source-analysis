@@ -16,6 +16,7 @@ The assessment combines **business evaluation, technical research, and lightweig
 - [Overview](#overview)
 - [Research Question](#research-question)
 - [Evaluation Framework](#evaluation-framework)
+- [Data Sources](#data-sources)
 - [Practical Testing](#practical-testing)
 - [Key Results](#key-results)
 - [Repository Structure](#repository-structure)
@@ -97,6 +98,14 @@ The Google Play Store and Apple App Store tests use Spotify as a representative 
 Amazon uses a representative consumer product page because Amazon primarily provides product-level rather than application-level customer reviews.
 
 These pages were used only for lightweight feasibility testing. The project does not assume that results from a single page represent all pages available on each platform.
+
+### Official Documentation Referenced
+
+The technical assessment also considers official platform documentation related to programmatic review access:
+
+- Amazon Creators API
+- Google Play Developer API
+- Apple App Store Connect API
 
 ---
 
