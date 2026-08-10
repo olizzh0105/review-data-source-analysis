@@ -403,8 +403,6 @@ Therefore, public browser accessibility appears high, while programmatic collect
 
 **Assessment: High for public accessibility**
 
-**Assessment: Medium to High**
-
 #### Official API Availability
 
 Google provides an official review API through the Google Play Developer API.
@@ -481,7 +479,7 @@ However, broader testing across multiple applications, repeated runs, and larger
 | Product Coverage | Medium to High |
 | Metadata Richness | Very High |
 | Analytical Potential | Very High |
-| Public Accessibility | Medium to High |
+| Public Accessibility | High |
 | Official Review API Accessibility | High for owned apps; Low to Medium for public apps |
 | Repeatability | High for owned apps; Medium to High in limited public-page testing |
 | Recurring Workflow Suitability | Medium to High |
