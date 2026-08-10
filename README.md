@@ -186,7 +186,7 @@ Google Play Store was the only platform in this test where candidate individual 
 | Initial HTTP Accessibility | Successful | Successful | Successful |
 | Observed Repeatability | Low–Medium | High | High |
 | Lightweight Review Extraction | Not successful | Successful | Not successful |
-| Initial Workflow Suitability | Low–Medium | **Medium–High** | Medium |
+| Initial Workflow Suitability | Low–Medium | Medium–High | Medium |
 
 The detailed reasoning behind these assessments is documented in [`assessment.md`](./assessment.md).
 
