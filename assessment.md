@@ -2,6 +2,18 @@
 
 ## 1. Executive Summary
 
+This assessment evaluates Amazon, Google Play Store, and Apple App Store as potential sources for building a recurring review-data ingestion workflow to support downstream sentiment analysis.
+
+The three platforms were compared from both business and technical/practical perspectives, including review relevance, review richness, metadata availability, product coverage, public accessibility, repeatability, and suitability for recurring collection.
+
+From a business perspective, Amazon provides the broadest product coverage and highly detailed customer feedback, while Google Play Store and Apple App Store provide more standardized application-focused review data. Google Play Store stands out for its relatively rich technical metadata, including information that can support version-level, device-level, and product-experience analysis.
+
+Lightweight practical testing was also conducted using Python `requests`, `BeautifulSoup`, and `pandas`. All three platforms were initially accessible through basic HTTP requests. However, repeated testing showed that Amazon responses were less consistent, while Google Play Store and Apple App Store demonstrated more stable page retrieval. In a small review extraction test, Google Play Store was the only platform from which candidate individual review text was successfully identified using the lightweight extraction approach.
+
+Based on the combined business assessment and practical testing, **Google Play Store is recommended as the initial data source for the ingestion workflow**. It provides the strongest overall balance of analytical value, structured metadata, observed repeatability, and initial extraction feasibility.
+
+Amazon remains valuable as a potential future source because of its broad product coverage and rich customer feedback, while Apple App Store represents a strong secondary option that may require a different extraction or data-access approach.
+
 ## 2. Research Question
 
 Which of Amazon, Google Play Store, and Apple App Store is the most suitable source for building a recurring review-data ingestion workflow for downstream sentiment analysis?
