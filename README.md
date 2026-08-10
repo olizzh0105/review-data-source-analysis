@@ -82,6 +82,23 @@ The three platforms were evaluated from two main perspectives.
 | Recurring Workflow Suitability | Suitability for ongoing automated ingestion |
 
 ---
+## Data Sources
+
+The assessment focuses on publicly visible customer review data from three platforms.
+
+| Platform | Data Type | Representative Page Used for Testing |
+|---|---|---|
+| Amazon | Product reviews | [Amazon Echo Dot (5th Gen)](https://www.amazon.com/Amazon-vibrant-helpful-routines-Charcoal/dp/B09B8V1LZ3) |
+| Google Play Store | Mobile app reviews | [Spotify - Google Play](https://play.google.com/store/apps/details?id=com.spotify.music) |
+| Apple App Store | Mobile app reviews | [Spotify - Apple App Store](https://apps.apple.com/us/app/spotify-music-and-podcasts/id324684580) |
+
+The Google Play Store and Apple App Store tests use Spotify as a representative application to make the comparison between the two app platforms more consistent.
+
+Amazon uses a representative consumer product page because Amazon primarily provides product-level rather than application-level customer reviews.
+
+These pages were used only for lightweight feasibility testing. The project does not assume that results from a single page represent all pages available on each platform.
+
+---
 
 ## Practical Testing
 
