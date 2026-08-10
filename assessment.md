@@ -162,7 +162,7 @@ Amazon customer reviews are visible through public product pages, making the dat
 
 However, public visibility does not necessarily mean that the data is easy or appropriate to collect automatically at scale. The feasibility of automated collection must therefore be evaluated separately from simple browser accessibility.
 
-**Assessment: Medium**
+**Assessment: High**
 
 #### Official API Availability
 
@@ -198,9 +198,11 @@ However, a recurring data ingestion workflow would require more than identifying
 
 Therefore, the repeatability of large-scale collection cannot be assumed based only on manual browser access.
 
-A small practical test will be conducted to better understand the accessibility and structure of the review data.
+Practical testing showed inconsistent responses across repeated requests. While one request returned a full product page, a later request returned a substantially smaller response despite the same HTTP status code `200`.
 
-**Assessment: To be validated through testing**
+This suggests that simple public-web collection may have lower repeatability for Amazon.
+
+**Assessment: Low to Medium**
 
 #### Restrictions and Operational Risk
 
@@ -239,9 +241,9 @@ Therefore, Amazon may be better suited as a future or supplementary data source 
 | Product Coverage | Very High |
 | Metadata Richness | High |
 | Analytical Potential | Very High |
-| Public Accessibility | Medium |
+| Public Accessibility | High |
 | Official Review API Accessibility | Low |
-| Repeatability | To be validated |
+| Repeatability | Low to Medium |
 | Recurring Workflow Suitability | Low to Medium |
 
 ### Preliminary Conclusion
@@ -395,7 +397,11 @@ However, there is an important difference between data being visible to users an
 
 Google's official developer tools are primarily designed for developers accessing reviews associated with applications they manage.
 
-Therefore, public browser accessibility is relatively high, while automated collection of reviews from arbitrary third-party applications requires additional evaluation.
+Initial practical testing also showed that a representative public Google Play page could be retrieved successfully through a basic HTTP request without login. The page returned a complete response with review-related content, and candidate individual review text was later identified using the lightweight extraction approach.
+
+Therefore, public browser accessibility appears high, while programmatic collection of arbitrary third-party applications still requires broader testing across multiple apps before its general reliability can be established.
+
+**Assessment: High for public accessibility**
 
 **Assessment: Medium to High**
 
@@ -428,9 +434,11 @@ The data can potentially support a recurring workflow such as:
 
 Structured fields such as rating, review text, date, app version, and device information make the data relatively straightforward to normalize and store in a relational database.
 
-However, the repeatability of collecting reviews from public third-party applications should still be confirmed through practical testing.
+Initial practical testing showed relatively consistent public-page retrieval for Google Play Store, and candidate individual review text was successfully extracted from the representative page using a lightweight `requests` and `BeautifulSoup` approach.
 
-**Assessment: High for owned apps; public collection to be validated**
+However, the current test used only one representative application. Additional testing across multiple apps would be needed to determine whether the extraction structure is consistently reusable.
+
+**Assessment: High for owned apps; Medium to High for public-page collection**
 
 #### Restrictions and Operational Risk
 
@@ -456,7 +464,9 @@ Google Play appears highly suitable for a recurring review workflow when the app
 
 Its combination of structured review text, ratings, timestamps, app versions, and technical metadata creates strong opportunities for automated analysis.
 
-For public third-party applications, recurring collection feasibility should still be validated through practical testing.
+For public third-party applications, the initial practical testing was encouraging: the tested page was retrieved consistently and candidate individual review text could be extracted using a lightweight public-web approach.
+
+However, broader testing across multiple applications, repeated runs, and larger review volumes would still be required before considering the workflow production-ready.
 
 **Assessment: Medium to High**
 
@@ -473,7 +483,7 @@ For public third-party applications, recurring collection feasibility should sti
 | Analytical Potential | Very High |
 | Public Accessibility | Medium to High |
 | Official Review API Accessibility | High for owned apps; Low to Medium for public apps |
-| Repeatability | High for owned apps; public collection to be validated |
+| Repeatability | High for owned apps; Medium to High in limited public-page testing |
 | Recurring Workflow Suitability | Medium to High |
 
 ### Preliminary Conclusion
@@ -486,7 +496,9 @@ This creates opportunities not only for sentiment analysis but also for identify
 
 The main limitation is that Google's official developer tools are primarily designed for applications managed by the developer rather than unrestricted public review collection.
 
-Therefore, Google Play currently appears to be a strong candidate for the initial ingestion workflow, but public-data collection feasibility should be confirmed through practical testing before making the final recommendation.
+Therefore, Google Play appears to be a strong candidate for the initial ingestion workflow. The practical testing conducted in this assessment supports this conclusion, as Google Play showed relatively consistent page retrieval and was the only tested platform from which candidate individual review text was successfully extracted using the lightweight approach.
+
+Additional testing across multiple applications would still be needed before treating the approach as production-ready.
 
 
 ## 6. Apple App Store
@@ -666,9 +678,11 @@ A potential recurring workflow could follow the structure:
 
 `Retrieve reviews -> normalize fields -> store data -> analyze sentiment`
 
-However, the repeatability of collecting public reviews from third-party applications should still be confirmed through practical testing.
+Initial practical testing showed relatively consistent public-page retrieval for the Apple App Store representative page.
 
-**Assessment: High for owned apps; public collection to be validated**
+However, the lightweight HTML extraction test did not successfully identify individual review blocks using the tested selectors. This suggests that basic public-page access is relatively stable, but structured review extraction may require a different extraction method or data-access approach.
+
+**Assessment: High for owned apps; Medium for public-page collection in limited testing**
 
 #### Restrictions and Operational Risk
 
@@ -695,9 +709,11 @@ For applications owned or managed by an organization, Apple App Store review dat
 
 Its structured review attributes can support automated collection, cleaning, storage, and sentiment analysis.
 
-For general public applications, recurring collection feasibility still needs to be validated through practical testing.
+For general public applications, initial testing showed relatively consistent page accessibility, but individual review blocks were not successfully extracted using the lightweight HTML approach tested in this assessment.
 
-**Assessment: Medium to High**
+This suggests that Apple App Store remains a feasible candidate, but additional technical work may be required before it can support a simple recurring public-web collection workflow.
+
+**Assessment: Medium**
 
 ---
 
@@ -712,8 +728,8 @@ For general public applications, recurring collection feasibility still needs to
 | Analytical Potential | Very High |
 | Public Accessibility | Medium to High |
 | Official Review API Accessibility | High for owned apps; Low to Medium for public apps |
-| Repeatability | High for owned apps; public collection to be validated |
-| Recurring Workflow Suitability | Medium to High |
+| Repeatability | High for owned apps; Medium in limited public-page testing |
+| Recurring Workflow Suitability | Medium |
 
 ### Preliminary Conclusion
 
@@ -725,25 +741,25 @@ Compared with Google Play, Apple appears slightly less rich in technical metadat
 
 Like Google Play, Apple's main technical limitation is that its official developer API is primarily designed for applications managed by the developer rather than unrestricted public third-party review collection.
 
-Therefore, Apple App Store should currently be considered a strong alternative to Google Play, with the final recommendation depending on practical accessibility and the reliability of recurring data collection.
+Initial practical testing showed that Apple App Store public pages could be retrieved relatively consistently, but the lightweight HTML extraction approach did not successfully identify individual review blocks.
+
+Therefore, Apple App Store remains a strong secondary candidate, but it appears to require a different extraction or data-access approach than Google Play for public third-party review collection.
 
 ## 7. Practical Testing
 
-### 7.1 Manual Browser Test
+### Test Scope
 
-A manual browser test was conducted to evaluate the basic accessibility and visibility of review-related information across the three platforms.
+The practical assessment used one representative public page from each platform:
 
-| Test | Amazon | Google Play | Apple App Store |
-|---|---|---|---|
-| Accessible without login | To be tested | To be tested | To be tested |
-| Reviews visible in browser | To be tested | To be tested | To be tested |
-| Rating visible | To be tested | To be tested | To be tested |
-| Review date visible | To be tested | To be tested | To be tested |
-| Reviewer visible | To be tested | To be tested | To be tested |
-| Pagination / More reviews | To be tested | To be tested | To be tested |
-| Structure looks consistent | To be tested | To be tested | To be tested |
+- **Amazon:** Echo Dot product page
+- **Google Play Store:** Spotify application page
+- **Apple App Store:** Spotify application page
 
-### 7.2 Basic Programmatic Accessibility Test
+Testing was conducted in GitHub Codespaces using Python with `requests`, `BeautifulSoup`, and `pandas`.
+
+The tests were designed as lightweight feasibility checks rather than production-scale scraping experiments. Results should therefore be interpreted as initial comparative evidence and may not generalize to all products or applications on each platform.
+
+### 7.1 Basic Programmatic Accessibility Test
 
 A lightweight Python test was conducted to examine whether public pages from each platform could be retrieved through a basic HTTP request.
 
@@ -765,7 +781,7 @@ Based on this initial test, no major difference in basic HTTP accessibility was 
 
 However, successful page retrieval does not necessarily mean that individual review records can be extracted easily or consistently. Additional testing is required to evaluate review-field availability and structured review extraction.
 
-### 7.3 Review Field Availability Test
+### 7.2 Review-Related Keyword Presence Test
 
 A second lightweight test was conducted to examine whether several review-related keywords were present in the text returned from each platform.
 
@@ -780,7 +796,7 @@ The test searched for the following terms:
 
 The purpose of this test was not to confirm successful structured extraction, but to determine whether potentially useful review-related information could be identified in the returned page content.
 
-| Field | Google Play Store | Apple App Store | Amazon |
+| Keyword | Google Play Store | Apple App Store | Amazon |
 |---|---|---|---|
 | Review | Yes | Yes | Yes |
 | Rating | Yes | Yes | No |
@@ -789,15 +805,15 @@ The purpose of this test was not to confirm successful structured extraction, bu
 | Author | No | No | No |
 | Helpful | Yes | No | No |
 
-Google Play Store showed the broadest range of review-related fields in the returned page text, including review, rating, date, version, and helpful-related information.
+Google Play Store showed the broadest range of review-related keywords in the returned page text, including review, rating, date, version, and helpful-related information.
 
-Apple App Store also showed review, rating, date, and version-related information, although author and helpful-related terms were not detected.
+Apple App Store also showed review, rating, date, and version-related keywords, although author and helpful-related terms were not detected.
 
-Amazon showed fewer identifiable review-related fields during this test. Review, date, and version-related terms were detected, while rating, author, and helpful-related terms were not detected.
+Amazon showed fewer identifiable review-related keywords during this test. Review, date, and version-related terms were detected, while rating, author, and helpful-related terms were not detected.
 
-These results should be interpreted cautiously. Keyword presence does not confirm that the corresponding field can be reliably extracted for individual review records. A structured extraction test is still required.
+These results should be interpreted cautiously. Keyword presence does not confirm that the corresponding data field can be reliably extracted for individual review records. A structured extraction test is still required.
 
-### 7.4 Repeatability Observation
+### 7.3 Repeatability Observation
 
 An important difference was observed across repeated HTTP tests.
 
@@ -820,13 +836,13 @@ This suggests that HTTP status code alone is not sufficient to determine whether
 
 The variation observed across repeated requests may indicate lower repeatability for a simple public-web collection workflow. Additional testing would be required before relying on Amazon as a stable recurring data source.
 
-### 7.5 Small Review Extraction Test
+### 7.4 Small Review Extraction Test
 
 A small structured extraction test was conducted to evaluate whether individual review-like text blocks could be identified directly from the HTML returned by each platform.
 
 The test used Python `requests` and `BeautifulSoup` and attempted several candidate CSS selectors for each platform. The objective was not to build a production scraper, but to determine whether individual review records appeared readily identifiable using a lightweight extraction approach.
 
-| Platform | Status Code | Selector Used | Review Blocks Found | Sample Review Text Extracted |
+| Platform | Status Code | Selector Used | Candidate Review Blocks Found | Sample Review Text Extracted |
 |---|---:|---|---:|---|
 | Google Play Store | 200 | `div.h3YV2d` | 3 | Yes |
 | Apple App Store | 200 | None | 0 | No |
@@ -842,7 +858,7 @@ Amazon also returned HTTP status code `200`, but no individual review blocks wer
 
 These results are limited to one representative page per platform and a small set of candidate selectors. Therefore, they should be interpreted as an initial feasibility comparison rather than evidence of production-level extraction reliability.
 
-### 7.6 Practical Testing Summary
+### 7.5 Practical Testing Summary
 
 The practical tests revealed meaningful differences among the three sources.
 
@@ -879,12 +895,11 @@ The three review-data sources were compared using both the business and technica
 | Analytical Potential | Very High | Very High | Very High |
 | Public Browser Accessibility | High | High | High |
 | Official Review API for Owned Apps | Low | High | High |
-| Public Third-Party Review Access | Limited / uncertain | Moderate | Moderate |
 | Basic HTTP Accessibility | Successful | Successful | Successful |
-| Repeatability in Practical Testing | Low to Medium | High | High |
-| Review-Related Field Availability | Medium | High | High |
+| Repeatability in Practical Testing | Low to Medium | High in limited testing | High in limited testing |
+| Review-Related Keyword Presence | Medium | High | High |
 | Lightweight Review Extraction | Not successful | Successful | Not successful |
-| Recurring Workflow Suitability | Low to Medium | High | Medium to High |
+| Recurring Workflow Suitability | Low to Medium | **Medium to High** | Medium |
 
 ### 8.2 Key Trade-Offs
 
