@@ -854,6 +854,239 @@ These findings will be considered together with the business-value assessment in
 
 ## 8. Comparative Assessment
 
+The three review-data sources were compared using both the business and technical/practical criteria defined earlier in this assessment, together with the results of the lightweight practical tests.
+
+### 8.1 Overall Comparison
+
+| Criterion | Amazon | Google Play Store | Apple App Store |
+|---|---|---|---|
+| Review Relevance | High | High | High |
+| Review Richness | Very High | Very High | High |
+| Product Coverage | Very High | Medium to High | Medium to High |
+| Metadata Richness | High | Very High | High |
+| Analytical Potential | Very High | Very High | Very High |
+| Public Browser Accessibility | High | High | High |
+| Official Review API for Owned Apps | Low | High | High |
+| Public Third-Party Review Access | Limited / uncertain | Moderate | Moderate |
+| Basic HTTP Accessibility | Successful | Successful | Successful |
+| Repeatability in Practical Testing | Low to Medium | High | High |
+| Review-Related Field Availability | Medium | High | High |
+| Lightweight Review Extraction | Not successful | Successful | Not successful |
+| Recurring Workflow Suitability | Low to Medium | High | Medium to High |
+
+### 8.2 Key Trade-Offs
+
+#### Amazon
+
+Amazon provides the broadest product coverage and some of the richest customer review content among the three sources.
+
+Its main strengths include:
+
+- Large variety of product categories
+- Detailed customer feedback
+- Strong potential for aspect-based sentiment analysis
+- Opportunities for product and competitor comparison
+
+However, the practical testing raised concerns about repeatability. Although the Amazon page initially returned a complete response, a later request returned a much smaller page despite still returning HTTP status code `200`.
+
+The lightweight extraction test also did not successfully identify individual review blocks.
+
+Therefore, Amazon offers very strong business value but introduces greater technical uncertainty for a simple recurring public-web ingestion workflow.
+
+#### Google Play Store
+
+Google Play Store provides a strong combination of business value, structured metadata, and practical accessibility.
+
+Its main strengths include:
+
+- Rich written user feedback
+- Ratings and review dates
+- App-version and technical metadata
+- Strong potential for sentiment and product analysis
+- Relatively consistent page responses during testing
+- Successful identification of candidate individual review text using a lightweight extraction approach
+
+The main limitation is that Google's official developer review API is primarily intended for applications managed by the developer. Public or competitor-app review collection therefore requires a separate public-web collection approach.
+
+Despite this limitation, Google Play performed best in the practical testing conducted for this assessment.
+
+#### Apple App Store
+
+Apple App Store also provides high-quality user feedback and useful structured information such as ratings, review text, dates, and territory.
+
+Its main strengths include:
+
+- Strong sentiment-analysis potential
+- Useful geographic information through territory data
+- Relatively consistent page accessibility
+- Structured official review access for owned applications
+
+However, the lightweight public-page extraction test did not successfully identify individual review blocks using the tested selectors.
+
+This does not mean that App Store reviews cannot be collected, but it suggests that additional extraction methods or data-access approaches may be required.
+
+### 8.3 Comparative Conclusion
+
+The comparison shows that no single source is strongest across every criterion.
+
+Amazon provides the broadest business coverage and very rich customer feedback, but it showed the greatest technical uncertainty during practical testing.
+
+Apple App Store provides high-quality and structured application feedback, but individual review extraction was not successful using the lightweight public-web approach tested in this assessment.
+
+Google Play Store provides the strongest overall balance. It offers rich analytical metadata, strong sentiment-analysis potential, relatively consistent accessibility, and was the only platform from which candidate individual review text was successfully extracted using the lightweight testing approach.
+
+Based on the combination of business value and observed technical feasibility, Google Play Store appears to be the most suitable source for the initial recurring review-data ingestion workflow.
+
+
 ## 9. Recommendation
 
+### Recommended Source: Google Play Store
+
+Based on the business assessment, technical research, and practical testing, **Google Play Store is recommended as the initial data source for the review-data ingestion workflow**.
+
+The recommendation is based on four main factors.
+
+### 9.1 Strong Analytical Value
+
+Google Play reviews provide both qualitative and quantitative information that can support downstream analysis.
+
+Potential analytical fields include:
+
+- Review text
+- Star rating
+- Review date
+- App version
+- Reviewer language
+- Device or operating-system information
+- Helpful-vote information
+
+These fields could support not only basic sentiment classification but also product-level analysis such as version-related sentiment changes, recurring technical issues, and feature feedback.
+
+### 9.2 Strong Balance Between Richness and Structure
+
+Amazon provides richer product diversity, but Google Play review data is more standardized because reviews are associated with applications that follow a relatively consistent product structure.
+
+This consistency may simplify:
+
+- Data normalization
+- Schema design
+- Cross-app comparison
+- Recurring ingestion
+- Downstream analytical workflows
+
+### 9.3 Strongest Practical Testing Result
+
+Google Play performed best in the lightweight practical testing.
+
+The public page:
+
+- Successfully returned HTTP status code `200`
+- Produced relatively consistent responses across repeated tests
+- Contained multiple review-related fields
+- Allowed candidate individual review text to be identified using `requests` and `BeautifulSoup`
+
+By comparison, Amazon showed inconsistent responses across repeated requests, while Apple App Store did not expose individual review blocks through the selectors tested.
+
+This provides initial evidence that Google Play may require less technical complexity for an early prototype.
+
+### 9.4 Suitable Starting Point for an Iterative Workflow
+
+The objective of the first implementation should not be to immediately support every possible review source.
+
+Starting with Google Play would allow the team to develop and validate the core workflow:
+
+`Collect -> Clean -> Structure -> Store -> Analyze`
+
+Once this workflow is stable, additional sources such as Apple App Store or Amazon could be evaluated for integration.
+
+### Recommendation Summary
+
+Google Play Store is recommended because it provides the strongest balance across:
+
+- Business relevance
+- Review richness
+- Metadata availability
+- Analytical potential
+- Observed repeatability
+- Initial extraction feasibility
+
+Amazon should remain a potential future source because of its high business value, while Apple App Store represents a strong secondary source for future expansion.
+
+The recommendation is based on a limited feasibility test using representative public pages and should therefore be treated as the preferred source for an initial prototype rather than a final production-scale architecture decision.
+
+
 ## 10. Next Steps
+
+If Google Play Store is selected as the initial source, the next phase should focus on validating whether the initial findings can be translated into a small, repeatable ingestion workflow.
+
+### 10.1 Validate Extraction Across Multiple Apps
+
+The current practical test used one representative application.
+
+The next step should test the extraction approach on several additional Google Play applications to determine whether the observed review structure is consistent across different apps.
+
+This would help evaluate whether the extraction logic is reusable rather than specific to one application.
+
+### 10.2 Define the Initial Review Data Schema
+
+A standardized review structure should be defined before larger-scale collection begins.
+
+Potential fields include:
+
+- `source`
+- `app_id`
+- `app_name`
+- `review_text`
+- `rating`
+- `review_date`
+- `app_version`
+- `reviewer_language`
+- `helpful_count`
+- `collection_timestamp`
+
+The schema can be refined depending on which fields are consistently available during extraction.
+
+### 10.3 Build a Small Repeatable Collection Prototype
+
+A lightweight ingestion script could then be developed to:
+
+1. Retrieve review data
+2. Extract selected fields
+3. Handle missing values
+4. Normalize the output
+5. Save the results in a structured format
+
+The first prototype could use CSV files for validation before introducing a relational database.
+
+### 10.4 Evaluate Data Quality
+
+The collected sample should be checked for:
+
+- Missing fields
+- Duplicate reviews
+- Inconsistent ratings
+- Invalid dates
+- Very short or empty review text
+- Changes in page structure
+
+These checks would help determine whether the source is reliable enough for downstream sentiment analysis.
+
+### 10.5 Prepare for Structured Storage
+
+Once the extraction process is sufficiently stable, the cleaned review data could be stored in a relational database such as SQLite for local prototyping.
+
+A simple initial structure could separate:
+
+- Applications
+- Reviews
+- Collection metadata
+
+This would support SQL-based analysis and future integration with downstream sentiment-analysis workflows.
+
+### 10.6 Reassess Additional Sources
+
+After the Google Play workflow is validated, Apple App Store could be evaluated as the next potential source.
+
+Amazon may also be reconsidered if a more reliable and approved method of accessing customer review data becomes available.
+
+This staged approach would allow the project to prioritize a technically manageable source first while preserving the option to expand the ingestion system later.
