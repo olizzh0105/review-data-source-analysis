@@ -810,11 +810,47 @@ The variation observed across repeated requests may indicate lower repeatability
 
 ### 7.5 Small Review Extraction Test
 
-To be completed.
+A small structured extraction test was conducted to evaluate whether individual review-like text blocks could be identified directly from the HTML returned by each platform.
+
+The test used Python `requests` and `BeautifulSoup` and attempted several candidate CSS selectors for each platform. The objective was not to build a production scraper, but to determine whether individual review records appeared readily identifiable using a lightweight extraction approach.
+
+| Platform | Status Code | Selector Used | Review Blocks Found | Sample Review Text Extracted |
+|---|---:|---|---:|---|
+| Google Play Store | 200 | `div.h3YV2d` | 3 | Yes |
+| Apple App Store | 200 | None | 0 | No |
+| Amazon | 200 | None | 0 | No |
+
+Google Play Store was the only platform in this test for which candidate individual review text could be identified and extracted using the lightweight `requests` and `BeautifulSoup` approach.
+
+Three candidate review blocks were detected from the Google Play page, and the extracted content included text that appeared to represent actual user feedback.
+
+For Apple App Store, the public page was successfully retrieved with HTTP status code `200`, but none of the tested CSS selectors identified individual review blocks. This suggests that review content may require a different extraction method or data-access approach.
+
+Amazon also returned HTTP status code `200`, but no individual review blocks were identified during this test. Combined with the inconsistent page responses observed in the repeatability test, this suggests that a simple HTML-based recurring collection workflow may be less reliable for Amazon.
+
+These results are limited to one representative page per platform and a small set of candidate selectors. Therefore, they should be interpreted as an initial feasibility comparison rather than evidence of production-level extraction reliability.
 
 ### 7.6 Practical Testing Summary
 
-To be completed.
+The practical tests revealed meaningful differences among the three sources.
+
+All three platforms were initially accessible through basic HTTP requests, with each returning status code `200`. Therefore, basic page accessibility alone did not provide a strong basis for distinguishing between the sources.
+
+However, differences became clearer as the testing progressed.
+
+Google Play Store showed the strongest performance in the lightweight tests. Its page responses were relatively consistent, several review-related fields were identifiable, and candidate individual review text could be extracted using a simple `requests` and `BeautifulSoup` workflow.
+
+Apple App Store also demonstrated relatively consistent basic accessibility and contained several useful review-related fields. However, the lightweight extraction test did not successfully identify individual review blocks using the tested selectors.
+
+Amazon demonstrated the greatest uncertainty. Although an initial request successfully returned a full product page, a later request returned a substantially smaller response despite the same HTTP status code. Individual review blocks were also not identified during the structured extraction test.
+
+Overall, the practical testing suggests the following initial technical ranking for a lightweight public-web collection workflow:
+
+1. **Google Play Store** – strongest initial feasibility
+2. **Apple App Store** – accessible and structured, but individual review extraction requires further investigation
+3. **Amazon** – high business value but lower observed repeatability and greater extraction uncertainty
+
+These findings will be considered together with the business-value assessment in the final comparative evaluation and recommendation.
 
 ## 8. Comparative Assessment
 
