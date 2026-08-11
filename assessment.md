@@ -723,7 +723,7 @@ However, its usefulness for an open-web ingestion workflow depends on whether th
 
 For applications owned or managed by an organization, Apple App Store review data appears highly suitable for a recurring workflow because the official App Store Connect API provides structured review access.
 
-For general public applications, the initial practical results were also encouraging. The representative page was retrieved relatively consistently, and eight candidate individual review blocks were successfully identified using a lightweight `requests` and `BeautifulSoup` approach.
+For general public applications, the initial practical results were also encouraging. The representative page was retrieved relatively consistently, and eight candidate individual elements were successfully identified using a lightweight `requests` and `BeautifulSoup` approach.
 
 This indicates that Apple App Store is a viable candidate for a lightweight public-web ingestion prototype.
 
@@ -757,7 +757,7 @@ Compared with Google Play, Apple provides somewhat less technical metadata becau
 
 Like Google Play, Apple's official developer API is primarily designed for applications managed by the developer rather than unrestricted public third-party review collection.
 
-Initial practical testing was encouraging. The Apple App Store representative page was retrieved relatively consistently, and eight candidate individual review blocks were successfully identified using the lightweight `requests` and `BeautifulSoup` approach.
+Initial practical testing was encouraging. The Apple App Store representative page was retrieved relatively consistently, and eight candidate individual elements were successfully identified using the lightweight `requests` and `BeautifulSoup` approach.
 
 Therefore, Apple App Store should be considered a strong technical alternative to Google Play Store. Google Play remains the preferred initial source primarily because of its richer analytical metadata and broader downstream product-analysis potential rather than because of a unique extraction advantage.
 
@@ -888,7 +888,7 @@ All three platforms were initially accessible through basic HTTP requests and re
 
 Google Play Store performed well in the lightweight testing. Its page responses were relatively consistent, several review-related fields were identifiable, and three candidate individual review blocks were successfully extracted using `requests` and `BeautifulSoup`.
 
-Apple App Store also demonstrated strong initial feasibility. Its public page responses were relatively consistent, and eight candidate individual review blocks were successfully identified using the same lightweight extraction approach.
+Apple App Store also demonstrated strong initial feasibility. Its public page responses were relatively consistent, and eight candidate individual elements were successfully identified using the same lightweight extraction approach.
 
 The different numbers of review blocks found on Google Play Store and Apple App Store should not be interpreted as evidence that one platform is inherently easier to collect than the other. The pages may expose different numbers of reviews in their initial HTML responses. The more important finding is that individual review structures were successfully identified for both platforms.
 
