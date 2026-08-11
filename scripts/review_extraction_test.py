@@ -16,19 +16,15 @@ headers = {
 # We are testing whether any of these structures expose review blocks.
 selectors = {
     "Google Play": [
-        "div.RHo1pe",
-        "div.h3YV2d"
+        "div[data-g-id='reviews'] > div:has(> header[data-review-id])"
     ],
 
     "Apple App Store": [
-        "div.we-customer-review",
-        "[class*='customer-review']",
-        "article[class*='review']"
+        "div[aria-labelledby^='review-']"
     ],
 
     "Amazon": [
-        "div[data-hook='review']",
-        "span[data-hook='review-body']"
+        "div[data-hook='reviewTextContainer']"
     ]
 }
 
