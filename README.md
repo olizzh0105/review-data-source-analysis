@@ -196,7 +196,7 @@ This suggests that a simple `requests` and `BeautifulSoup` workflow may not cons
 | Product Coverage | Very High | Medium–High | Medium–High |
 | Metadata Richness | High | Very High | High |
 | Initial HTTP Accessibility | Successful | Successful | Successful |
-| Observed Repeatability | Low–Medium | High | High |
+| Observed Repeatability | Low–Medium | High in limited testing | High in limited testing |
 | Lightweight Review Extraction | Not successful | Successful | Successful |
 | Initial Workflow Suitability | Low–Medium | Medium–High | Medium–High |
 
