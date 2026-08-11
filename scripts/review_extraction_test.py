@@ -24,7 +24,7 @@ selectors = {
     ],
 
     "Amazon": [
-        "div[data-hook='reviewTextContainer']"
+        "div[data-hook='reviewContainer']"
     ]
 }
 
