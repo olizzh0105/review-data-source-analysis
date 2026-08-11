@@ -2,17 +2,22 @@
 
 ## 1. Executive Summary
 
+
 This assessment evaluates Amazon, Google Play Store, and Apple App Store as potential sources for building a recurring review-data ingestion workflow to support downstream sentiment analysis.
 
 The three platforms were compared from both business and technical/practical perspectives, including review relevance, review richness, metadata availability, product coverage, public accessibility, repeatability, and suitability for recurring collection.
 
-From a business perspective, Amazon provides the broadest product coverage and highly detailed customer feedback, while Google Play Store and Apple App Store provide more standardized application-focused review data. Google Play Store stands out for its relatively rich technical metadata, including information that can support version-level, device-level, and product-experience analysis.
+From a business perspective, Amazon provides the broadest product coverage and highly detailed customer feedback, while Google Play Store and Apple App Store provide more standardized application-focused review data. Google Play Store stands out for its relatively rich technical metadata, which can support version-level, device-level, and broader product-experience analysis.
 
-Lightweight practical testing was also conducted using Python `requests`, `BeautifulSoup`, and `pandas`. All three platforms were initially accessible through basic HTTP requests. However, repeated testing showed that Amazon responses were less consistent, while Google Play Store and Apple App Store demonstrated more stable page retrieval. In a small review extraction test, Google Play Store was the only platform from which candidate individual review text was successfully identified using the lightweight extraction approach.
+Lightweight practical testing was conducted using Python `requests`, `BeautifulSoup`, and `pandas`. All three platforms were accessible through basic HTTP requests. Google Play Store and Apple App Store showed relatively consistent page retrieval, while Amazon produced less consistent responses across repeated tests.
 
-Based on the combined business assessment and practical testing, **Google Play Store is recommended as the initial data source for the ingestion workflow**. It provides the strongest overall balance of analytical value, structured metadata, observed repeatability, and initial extraction feasibility.
+In the small review extraction test, both Google Play Store and Apple App Store successfully exposed individual review blocks through the lightweight `requests` and `BeautifulSoup` approach. Three candidate review blocks were identified from Google Play Store and eight from Apple App Store.
 
-Amazon remains valuable as a potential future source because of its broad product coverage and rich customer feedback, while Apple App Store represents a strong secondary option that may require a different extraction or data-access approach.
+Amazon produced a different result. Review-specific elements were visible during manual inspection of the browser-rendered DOM, but the same review containers were not identified in the HTML returned through the basic Python request. This suggests that a simple HTTP-based extraction approach may not be sufficient for reliable Amazon review collection.
+
+Based on the combined business assessment and practical testing, **Google Play Store is recommended as the initial data source for the ingestion workflow**. Both Google Play Store and Apple App Store demonstrated promising lightweight extraction feasibility, but Google Play Store provides a stronger overall combination of rich analytical metadata, standardized app-review data, observed repeatability, and downstream product-analysis potential.
+
+Amazon remains valuable as a potential future source because of its broad product coverage and rich customer feedback, while Apple App Store represents a strong secondary option that also demonstrated successful lightweight review extraction.
 
 ## 2. Research Question
 
@@ -184,22 +189,24 @@ This means that the official product API does not appear to provide a straightfo
 
 #### Data Structure and Repeatability
 
-Amazon product and review pages generally follow recognizable layouts, which suggests that review information may be technically identifiable from public-facing pages.
+Amazon review pages contain recognizable review-specific structures in the browser-rendered DOM.
 
-However, a recurring data ingestion workflow would require more than identifying individual fields. The system would need to consistently handle:
+During manual HTML inspection, individual review elements were observed with attributes such as:
 
-- Multiple products
-- Multiple review pages
-- Pagination
-- Changes in page structure
-- Missing or inconsistent review fields
-- Request failures or access restrictions
+- `data-hook="reviewContainer"`
+- `data-hook="review"`
+- `data-hook="reviewTextContainer"`
+- `data-hook="review-by-line"`
 
-Therefore, the repeatability of large-scale collection cannot be assumed based only on manual browser access.
+These structures suggest that review records are clearly identifiable after the page is fully rendered in a browser.
 
-Practical testing showed inconsistent responses across repeated requests. While one request returned a full product page, a later request returned a substantially smaller response despite the same HTTP status code `200`.
+However, practical testing showed that the same structures were not consistently available in the HTML returned through basic Python `requests`.
 
-This suggests that simple public-web collection may have lower repeatability for Amazon.
+Repeated HTTP requests also produced substantially different responses. One request returned a full product page of approximately 1.13 million characters, while a later request returned only approximately 3,781 characters despite both responses having HTTP status code `200`.
+
+In the small extraction test, the manually identified selector `div[data-hook='reviewContainer']` returned zero review blocks from the HTML retrieved through `requests`, even though the same review containers were visible in the browser-rendered DOM.
+
+This distinction suggests that simple HTTP retrieval may not consistently reproduce the final review structure visible to a browser. A more advanced rendering or data-access approach may therefore be required for reliable recurring Amazon review collection.
 
 **Assessment: Low to Medium**
 
@@ -225,9 +232,13 @@ Any production-scale implementation would therefore require a more detailed revi
 
 Amazon has very high business value but lower technical practicality for the proposed recurring ingestion system.
 
-The data itself could support sophisticated sentiment and product analysis, but reliable long-term collection may require significantly more engineering effort and platform-specific maintenance than other sources.
+The browser-rendered page clearly exposes structured review elements, indicating that the underlying review data is potentially extractable. However, the lightweight testing showed that these elements were not consistently present in the HTML returned through basic Python HTTP requests.
 
-Therefore, Amazon may be better suited as a future or supplementary data source rather than the initial source used to prototype the ingestion workflow.
+Combined with the substantial variation observed across repeated responses, this creates additional uncertainty for a simple and maintainable recurring workflow based only on `requests` and `BeautifulSoup`.
+
+A more advanced approach, such as browser rendering or another approved data-access method, may be required before Amazon could be used reliably as a recurring source.
+
+Therefore, Amazon may be better suited as a future or supplementary source rather than the initial source used to prototype the ingestion workflow.
 
 **Assessment: Low to Medium**
 
@@ -493,9 +504,11 @@ This creates opportunities not only for sentiment analysis but also for identify
 
 The main limitation is that Google's official developer tools are primarily designed for applications managed by the developer rather than unrestricted public review collection.
 
-Therefore, Google Play appears to be a strong candidate for the initial ingestion workflow. The practical testing conducted in this assessment supports this conclusion, as Google Play showed relatively consistent page retrieval and was the only tested platform from which candidate individual review text was successfully extracted using the lightweight approach.
+Initial practical testing was encouraging. The representative Google Play page was retrieved relatively consistently, and three candidate individual review blocks were successfully identified using a lightweight `requests` and `BeautifulSoup` approach.
 
-Additional testing across multiple applications would still be needed before treating the approach as production-ready.
+Apple App Store also demonstrated successful lightweight review extraction, so extraction feasibility alone does not clearly distinguish the two app platforms. Google Play remains the stronger initial candidate primarily because of its richer technical metadata and broader downstream product-analysis potential.
+
+Additional testing across multiple applications and larger review volumes would still be required before treating the approach as production-ready.
 
 
 ## 6. Apple App Store
@@ -677,9 +690,15 @@ A potential recurring workflow could follow the structure:
 
 Initial practical testing showed relatively consistent public-page retrieval for the Apple App Store representative page.
 
-However, the lightweight HTML extraction test did not successfully identify individual review blocks using the tested selectors. This suggests that basic public-page access is relatively stable, but structured review extraction may require a different extraction method or data-access approach.
+During manual DOM inspection, individual review containers were identified using review-specific attributes. The selector `div[aria-labelledby^='review-']` was then tested against the HTML returned through Python `requests`.
 
-**Assessment: High for owned apps; Medium for public-page collection in limited testing**
+The lightweight extraction test successfully identified eight candidate review blocks. The extracted content included review titles, dates, reviewer information, ratings, and written user feedback.
+
+This suggests that, for the representative page tested, Apple App Store reviews were compatible with a lightweight `requests` and `BeautifulSoup` extraction approach.
+
+However, the current test used only one representative application. Additional testing across multiple applications and repeated runs would still be required before assuming that the same structure is consistently reusable.
+
+**Assessment: High for owned apps; Medium to High for public-page collection in limited testing**
 
 #### Restrictions and Operational Risk
 
@@ -702,15 +721,15 @@ However, its usefulness for an open-web ingestion workflow depends on whether th
 
 #### Suitability for a Recurring Workflow
 
-For applications owned or managed by an organization, Apple App Store review data appears highly suitable for a recurring workflow.
+For applications owned or managed by an organization, Apple App Store review data appears highly suitable for a recurring workflow because the official App Store Connect API provides structured review access.
 
-Its structured review attributes can support automated collection, cleaning, storage, and sentiment analysis.
+For general public applications, the initial practical results were also encouraging. The representative page was retrieved relatively consistently, and eight candidate individual review blocks were successfully identified using a lightweight `requests` and `BeautifulSoup` approach.
 
-For general public applications, initial testing showed relatively consistent page accessibility, but individual review blocks were not successfully extracted using the lightweight HTML approach tested in this assessment.
+This indicates that Apple App Store is a viable candidate for a lightweight public-web ingestion prototype.
 
-This suggests that Apple App Store remains a feasible candidate, but additional technical work may be required before it can support a simple recurring public-web collection workflow.
+However, the current evidence is limited to one application and a small number of tests. Broader validation across multiple applications, repeated requests, and larger review volumes would still be required before considering the workflow production-ready.
 
-**Assessment: Medium**
+**Assessment: Medium to High**
 
 ---
 
@@ -725,22 +744,24 @@ This suggests that Apple App Store remains a feasible candidate, but additional 
 | Analytical Potential | Very High |
 | Public Accessibility | Medium to High |
 | Official Review API Accessibility | High for owned apps; Low to Medium for public apps |
-| Repeatability | High for owned apps; Medium in limited public-page testing |
-| Recurring Workflow Suitability | Medium |
+| Repeatability | High for owned apps; Medium to High in limited public-page testing |
+| Recurring Workflow Suitability | Medium to High |
 
 ### Preliminary Conclusion
 
-Apple App Store is another strong candidate for sentiment-analysis data.
+Apple App Store is a strong candidate for sentiment-analysis data.
 
 Its major strengths include structured written reviews, numerical ratings, review dates, and territory information. Territory-level data may be particularly useful for comparing customer feedback across different geographic markets.
 
-Compared with Google Play, Apple appears slightly less rich in technical metadata because Google Play may provide additional information related to app versions, operating systems, and devices.
+Compared with Google Play, Apple provides somewhat less technical metadata because Google Play may include additional information related to app versions, operating systems, devices, language, and helpful-vote information.
 
-Like Google Play, Apple's main technical limitation is that its official developer API is primarily designed for applications managed by the developer rather than unrestricted public third-party review collection.
+Like Google Play, Apple's official developer API is primarily designed for applications managed by the developer rather than unrestricted public third-party review collection.
 
-Initial practical testing showed that Apple App Store public pages could be retrieved relatively consistently, but the lightweight HTML extraction approach did not successfully identify individual review blocks.
+Initial practical testing was encouraging. The Apple App Store representative page was retrieved relatively consistently, and eight candidate individual review blocks were successfully identified using the lightweight `requests` and `BeautifulSoup` approach.
 
-Therefore, Apple App Store remains a strong secondary candidate, but it appears to require a different extraction or data-access approach than Google Play for public third-party review collection.
+Therefore, Apple App Store should be considered a strong technical alternative to Google Play Store. Google Play remains the preferred initial source primarily because of its richer analytical metadata and broader downstream product-analysis potential rather than because of a unique extraction advantage.
+
+Additional testing across multiple applications would still be required before treating either public-page approach as production-ready.
 
 ## 7. Practical Testing
 
