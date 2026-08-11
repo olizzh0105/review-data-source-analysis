@@ -886,10 +886,11 @@ The practical tests revealed meaningful differences among the three sources.
 
 All three platforms were initially accessible through basic HTTP requests and returned status code `200`. However, successful HTTP retrieval alone did not guarantee that individual review records could be identified or extracted consistently.
 
-Google Play Store performed well in the lightweight testing. Its page responses were relatively consistent, several review-related fields were identifiable, and three candidate individual review blocks were successfully extracted using `requests` and `BeautifulSoup`.
+Google Play Store performed well in the lightweight testing. Its page responses were relatively consistent, several review-related fields were identifiable, and individual review content was successfully extracted using `requests` and `BeautifulSoup`. 
 
-Apple App Store also demonstrated strong initial feasibility. Its public page responses were relatively consistent, and eight candidate individual elements were successfully identified using the same lightweight extraction approach.
+Apple App Store also demonstrated strong initial feasibility. Its public page responses were relatively consistent, and review-related content was also successfully identified using the same lightweight extraction approach.
 
+The different numbers of matched elements should not be interpreted as evidence that one platform is inherently easier to collect than the other. The more important finding is that review content was identifiable for both platforms.
 The different numbers of review blocks found on Google Play Store and Apple App Store should not be interpreted as evidence that one platform is inherently easier to collect than the other. The pages may expose different numbers of reviews in their initial HTML responses. The more important finding is that individual review structures were successfully identified for both platforms.
 
 Amazon demonstrated greater technical uncertainty. Although review containers were clearly visible during manual inspection of the browser-rendered DOM, the same structures were not identified in the HTML returned through the basic Python request. Amazon also produced substantially different response sizes across repeated HTTP tests.
@@ -971,7 +972,7 @@ Its main strengths include:
 - Structured official review access for owned applications
 - Successful lightweight extraction of individual review blocks
 
-In the practical test, eight candidate review blocks were successfully identified using the selector `div[aria-labelledby^='review-']`.
+In the practical test, review-related elements were successfully identified using the selector `div[aria-labelledby^='review-']`, and sample review content could be extracted from the returned HTML.
 
 This places Apple App Store close to Google Play Store from an initial public-page extraction-feasibility perspective.
 
@@ -985,9 +986,9 @@ Amazon provides the broadest product coverage and very rich customer feedback, g
 
 Google Play Store and Apple App Store both demonstrated successful lightweight review extraction and relatively consistent public-page retrieval.
 
-Apple App Store performed strongly from an extraction-feasibility perspective, with eight candidate review blocks identified in the representative-page test.
+Apple App Store performed strongly from an extraction-feasibility perspective, with review-related content successfully identified and extracted from the representative page.
 
-Google Play Store also demonstrated successful extraction and provides richer potential technical metadata, including app-version, operating-system, device, language, and helpful-vote information. This creates additional opportunities for product-level and technical sentiment analysis.
+Google Play Store also demonstrated successful extraction and provides richer potential technical metadata, including app-version, operating-system, device, language, and helpful-vote information.
 
 Therefore, the practical testing alone does not clearly separate Google Play Store and Apple App Store. When technical feasibility is combined with metadata richness and downstream analytical potential, **Google Play Store provides the strongest overall balance for the initial ingestion workflow**.
 
