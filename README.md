@@ -78,7 +78,6 @@ The three platforms were evaluated from two main perspectives.
 | Public Accessibility | Whether review-related data can be accessed without login |
 | Data Structure | Consistency and usability of returned data |
 | Repeatability | Whether collection appears reproducible across repeated requests |
-| Pagination | Ability to expand collection beyond an initial page |
 | Restrictions | API, authorization, or public-web collection limitations |
 | Recurring Workflow Suitability | Suitability for ongoing automated ingestion |
 
