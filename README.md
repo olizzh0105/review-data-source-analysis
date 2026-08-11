@@ -7,7 +7,7 @@ The assessment combines **business evaluation, technical research, and lightweig
 > [!NOTE]
 > **Recommended initial source: Google Play Store**
 >
-> Based on the current assessment and practical testing, Google Play Store provides the strongest overall balance of review richness, metadata availability, repeatability, and initial extraction feasibility.
+> Based on the current assessment and practical testing, both Google Play Store and Apple App Store demonstrated successful lightweight review extraction. Google Play Store is recommended because it provides the strongest overall balance of review richness, technical metadata, repeatability, extraction feasibility, and downstream analytical potential.
 
 ---
 
@@ -169,17 +169,23 @@ A lightweight structured extraction test was conducted using:
 
 - `requests`
 - `BeautifulSoup`
-- Candidate CSS selectors
+- CSS selectors identified through manual DOM inspection
 
 Results:
 
 | Platform | Candidate Review Blocks Found | Sample Review Text Extracted |
 |---|---:|---|
 | Google Play Store | 3 | Yes |
-| Apple App Store | 0 | No |
+| Apple App Store | 8 | Yes |
 | Amazon | 0 | No |
 
-Google Play Store was the only platform in this test where candidate individual review text was successfully identified using the lightweight HTML extraction approach.
+Both Google Play Store and Apple App Store successfully exposed identifiable individual review blocks through the lightweight HTML extraction approach.
+
+Google Play Store returned three candidate review blocks, while Apple App Store returned eight. The difference in block count should not be interpreted as evidence that one platform is inherently easier to collect, because each page may expose a different number of reviews in its initial HTML response.
+
+Amazon produced a different result. Review-specific elements were visible during manual inspection of the browser-rendered DOM, but the same review containers were not identified in the HTML returned through the basic Python request.
+
+This suggests that a simple `requests` and `BeautifulSoup` workflow may not consistently reproduce the Amazon review structure visible in a fully rendered browser.
 
 ---
 
@@ -192,8 +198,8 @@ Google Play Store was the only platform in this test where candidate individual 
 | Metadata Richness | High | Very High | High |
 | Initial HTTP Accessibility | Successful | Successful | Successful |
 | Observed Repeatability | Low–Medium | High | High |
-| Lightweight Review Extraction | Not successful | Successful | Not successful |
-| Initial Workflow Suitability | Low–Medium | Medium–High | Medium |
+| Lightweight Review Extraction | Not successful | Successful | Successful |
+| Initial Workflow Suitability | Low–Medium | Medium–High | Medium–High |
 
 The detailed reasoning behind these assessments is documented in [`assessment.md`](./assessment.md).
 
@@ -300,20 +306,26 @@ data/review_extraction_results.csv
 
 ### Google Play Store
 
-Based on the combined business assessment and practical testing, **Google Play Store is recommended as the initial data source for a prototype recurring ingestion workflow**.
+Based on the combined business assessment, technical research, and practical testing, **Google Play Store is recommended as the initial data source for a prototype recurring ingestion workflow**.
 
-The recommendation is primarily based on:
+Both Google Play Store and Apple App Store demonstrated successful lightweight review extraction using `requests` and `BeautifulSoup`.
 
-- Strong review relevance
-- Rich analytical metadata
-- High downstream sentiment-analysis potential
-- Relatively consistent responses during testing
-- Successful identification of candidate individual review text
-- Lower observed technical uncertainty than Amazon
+Google Play Store is preferred because it combines this practical feasibility with richer potential analytical metadata, including app-version, operating-system, device, language, and helpful-vote information.
 
-Amazon remains an attractive future source because of its broad product coverage and rich customer feedback.
+This creates broader opportunities for downstream analysis such as:
 
-Apple App Store is also a strong secondary candidate but may require a different public-data extraction or access approach.
+- Sentiment analysis
+- Version-level sentiment tracking
+- Technical issue identification
+- Feature and pain-point analysis
+- Device or operating-system comparisons
+- Trend analysis
+
+Amazon remains an attractive future source because of its broad product coverage and rich customer feedback. However, the current testing showed greater technical uncertainty for a simple recurring public-web workflow.
+
+Apple App Store is a strong secondary candidate. It demonstrated successful lightweight review extraction in the representative-page test and offers useful structured review information, including review titles, ratings, dates, written feedback, and territory-related information.
+
+The recommendation should therefore be interpreted as a practical starting point for the initial prototype rather than a final production-scale source-selection decision.
 
 ---
 
