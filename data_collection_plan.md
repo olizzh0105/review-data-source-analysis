@@ -14,7 +14,7 @@ The collection will include multiple applications across several categories. Whe
 
 A balanced multi-app sampling strategy will be used rather than collecting a large number of reviews from a single application.
 
-The initial plan is to collect approximately 3,000 reviews per app from four applications on each platform.
+Based on practical pagination testing, the sampling strategy was revised to use a broader set of applications with approximately 500 reviews per app. This adjustment reflects the observed Apple App Store RSS feed limit while also improving cross-app and cross-category coverage.
 
 This would produce approximately:
 
