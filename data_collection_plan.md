@@ -14,7 +14,17 @@ The collection will include multiple applications across several categories. Whe
 
 A balanced multi-app sampling strategy will be used rather than collecting a large number of reviews from a single application.
 
-Based on practical pagination testing, the sampling strategy was revised to use a broader set of applications with approximately 500 reviews per app. This adjustment reflects the observed Apple App Store RSS feed limit while also improving cross-app and cross-category coverage.
+Based on practical pagination testing, the sampling strategy was revised to use a broader set of applications with up to approximately 500 unique reviews per app.
+
+The revised design includes 24 applications across six study categories. The same applications will be included on both Google Play Store and Apple App Store to support balanced cross-platform comparisons.
+
+This strategy targets approximately:
+
+- Google Play Store: 12,000 reviews
+- Apple App Store: 12,000 reviews
+- Combined dataset: approximately 24,000 reviews
+
+The revised approach reflects the observed pagination limit of the Apple App Store review feed while also improving cross-app and cross-category coverage.
 
 This would produce approximately:
 
@@ -62,12 +72,10 @@ Using the same applications on both Google Play Store and Apple App Store will a
 
 | Platform | Apps | Target per App | Approximate Total |
 |---|---:|---:|---:|
-| Google Play Store | 4 | 3,000 | 12,000 |
-| Apple App Store | 4 | 3,000 | 12,000 |
+| Google Play Store | 24 | Up to 500 | 12,000 |
+| Apple App Store | 24 | Up to 500 | 12,000 |
 
-The target counts may be adjusted depending on the number of reviews that can be consistently retrieved from each application.
-
-The goal is to remain within the requested range of approximately 10,000–20,000 reviews per platform while maintaining reasonable balance across applications.
+Actual review counts may vary if fewer than 500 unique reviews are available through the collection method for a particular application.
 
 ---
 
