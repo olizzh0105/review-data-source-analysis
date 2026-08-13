@@ -68,3 +68,23 @@ df.to_csv(
 )
 
 print(f"\nSaved to: {output_path}")
+
+print("\nData Quality Check")
+
+print("Duplicate review IDs:")
+print(df["review_id"].duplicated().sum())
+
+print("\nDuplicate review text:")
+print(df["review_text"].duplicated().sum())
+
+print("\nRating distribution:")
+print(df["rating"].value_counts().sort_index())
+
+df["review_length"] = df["review_text"].str.len()
+
+print("\nReview length summary:")
+print(df["review_length"].describe())
+
+print("\nDate range:")
+print("Earliest:", df["review_date"].min())
+print("Latest:", df["review_date"].max())
