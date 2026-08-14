@@ -26,13 +26,7 @@ This strategy targets approximately:
 
 The revised approach reflects the observed pagination limit of the Apple App Store review feed while also improving cross-app and cross-category coverage.
 
-This would produce approximately:
-
-- Google Play Store: 12,000 reviews
-- Apple App Store: 12,000 reviews
-- Combined dataset: approximately 24,000 reviews
-
-The same applications will be used across both platforms where possible.
+The same applications will be used across both platforms to support direct cross-platform comparisons.
 
 This sampling approach is intended to support:
 
@@ -50,14 +44,34 @@ This sampling approach is intended to support:
 
 | Category | App | Google Play ID | Apple App Store ID | Target Reviews per Platform |
 |---|---|---|---|---:|
-| Music | Spotify | `com.spotify.music` | `324684580` | 3,000 |
-| Transportation | Uber | `com.ubercab` | `368677368` | 3,000 |
-| Social / News | Reddit | `com.reddit.frontpage` | `1064216828` | 3,000 |
-| Education | Duolingo | `com.duolingo` | `570060128` | 3,000 |
+| Music & Audio | Spotify | `com.spotify.music` | `324684580` | Up to 500 |
+| Music & Audio | YouTube Music | `com.google.android.apps.youtube.music` | `1017492454` | Up to 500 |
+| Music & Audio | SoundCloud | `com.soundcloud.android` | `336353151` | Up to 500 |
+| Music & Audio | Pandora | `com.pandora.android` | `284035177` | Up to 500 |
+| Travel & Mobility | Uber | `com.ubercab` | `368677368` | Up to 500 |
+| Travel & Mobility | Lyft | `me.lyft.android` | `529379082` | Up to 500 |
+| Travel & Mobility | Airbnb | `com.airbnb.android` | `401626263` | Up to 500 |
+| Travel & Mobility | Booking.com | `com.booking` | `367003839` | Up to 500 |
+| Social & Community | Reddit | `com.reddit.frontpage` | `1064216828` | Up to 500 |
+| Social & Community | TikTok | `com.zhiliaoapp.musically` | `835599320` | Up to 500 |
+| Social & Community | Pinterest | `com.pinterest` | `429047995` | Up to 500 |
+| Social & Community | Discord | `com.discord` | `985746746` | Up to 500 |
+| Education | Duolingo | `com.duolingo` | `570060128` | Up to 500 |
+| Education | Khan Academy | `org.khanacademy.android` | `469863705` | Up to 500 |
+| Education | Quizlet | `com.quizlet.quizletandroid` | `546473125` | Up to 500 |
+| Education | Coursera | `org.coursera.android` | `736535961` | Up to 500 |
+| Finance | PayPal | `com.paypal.android.p2pmobile` | `283646709` | Up to 500 |
+| Finance | Venmo | `com.venmo` | `351727428` | Up to 500 |
+| Finance | Cash App | `com.squareup.cash` | `711923939` | Up to 500 |
+| Finance | Robinhood | `com.robinhood.android` | `938003185` | Up to 500 |
+| Productivity & Cloud | Notion | `notion.id` | `1232780281` | Up to 500 |
+| Productivity & Cloud | Dropbox | `com.dropbox.android` | `327630330` | Up to 500 |
+| Productivity & Cloud | Slack | `com.Slack` | `618783545` | Up to 500 |
+| Productivity & Cloud | Microsoft OneDrive | `com.microsoft.skydrive` | `477537958` | Up to 500 |
 
 ### Sampling Rationale
 
-These applications were selected because they represent different product categories and have substantial user-review activity.
+These applications were selected because they represent different product categories and have substantial user-review activity. The broader 24-app design was adopted after practical testing showed that the Apple App Store review feed provided up to approximately 500 reviews per application through the tested pagination method.
 
 Using the same applications on both Google Play Store and Apple App Store will allow later comparisons such as:
 
@@ -78,6 +92,7 @@ Using the same applications on both Google Play Store and Apple App Store will a
 Actual review counts may vary if fewer than 500 unique reviews are available through the collection method for a particular application.
 
 The goal is to remain within the requested range of approximately 10,000–20,000 reviews per platform while maintaining broad coverage across applications and categories.
+
 ---
 
 ## Expected Fields
@@ -100,30 +115,41 @@ The collection process will initially attempt to capture the following fields wh
 
 Where consistently available, additional fields may include:
 
+- `review_title`
 - `app_version`
 - `developer_response`
 - `developer_response_date`
 - `reviewer_name`
-- `language`
 - `helpful_count`
+- `source_page`
 
-The final EDA will be based only on fields that are consistently observed in the collected data.
-
-Any differences between expected fields and actually available fields will be documented.
+Language was considered during the planning stage but was not directly available as a review-level field in the initial collection outputs. Language-related analysis may therefore require separate detection during EDA rather than relying on source metadata.
 
 ---
 
 ## Collection Method
 
-Separate collection scripts will be developed for the two platforms:
+The final balanced collection will use platform-specific scripts:
 
-- `scripts/collect_google_play.py`
-- `scripts/collect_apple_store.py`
+- `scripts/collect_google_play_balanced.py`
+- `scripts/collect_apple_store_full.py`
+
+Earlier collection scripts are retained as validation and methodology-development steps:
+
+- `scripts/collect_google_play.py`: single-app smoke test using Spotify
+- `scripts/collect_google_play_multiapp.py`: four-app validation test
+- `scripts/collect_google_play_full.py`: original four-app deep collection with approximately 3,000 reviews per app
+- `scripts/collect_google_play_balanced.py`: revised balanced collection across 24 apps with up to 500 reviews per app
+- `scripts/collect_apple_store.py`: single-app Apple App Store smoke test
+- `scripts/collect_apple_store_multiapp.py`: four-app Apple App Store validation test
+- `scripts/collect_apple_store_full.py`: final balanced Apple App Store collection across 24 apps with up to 500 reviews per app
 
 Raw collected data will be stored separately by platform:
 
 - `data/raw/google_play_reviews.csv`
-- `data/raw/apple_reviews.csv`
+- `data/raw/apple_store_reviews.csv`
+
+Raw collected data will be preserved without deduplication. Duplicate review IDs identified during collection will be documented and handled separately during data processing and EDA.
 
 The collection scripts should:
 
@@ -140,7 +166,7 @@ Cleaning and transformation will be performed separately during the EDA phase.
 
 ## Data Quality Considerations
 
-The collected data will later be evaluated for:
+Where applicable based on the fields actually available for each platform, the collected data will later be evaluated for:
 
 - Missing values
 - Duplicate review IDs
