@@ -16,13 +16,9 @@ A balanced multi-app sampling strategy will be used rather than collecting a lar
 
 Based on practical pagination testing, the sampling strategy was revised to use a broader set of applications with up to approximately 500 unique reviews per app.
 
-The revised design includes 24 applications across six study categories. The same applications will be included on both Google Play Store and Apple App Store to support balanced cross-platform comparisons.
+The revised design includes 28 applications across six study categories, with up to approximately 500 reviews collected per application. The same applications will be included on both Google Play Store and Apple App Store to support balanced cross-platform comparisons.
 
-This strategy targets approximately:
-
-- Google Play Store: 12,000 reviews
-- Apple App Store: 12,000 reviews
-- Combined dataset: approximately 24,000 reviews
+The design targets approximately 10,000–14,000 reviews per platform, depending on review availability.
 
 The revised approach reflects the observed pagination limit of the Apple App Store review feed while also improving cross-app and cross-category coverage.
 
@@ -68,6 +64,10 @@ This sampling approach is intended to support:
 | Productivity & Cloud | Dropbox | `com.dropbox.android` | `327630330` | Up to 500 |
 | Productivity & Cloud | Slack | `com.Slack` | `618783545` | Up to 500 |
 | Productivity & Cloud | Microsoft OneDrive | `com.microsoft.skydrive` | `477537958` | Up to 500 |
+| Music & Audio | Shazam | `com.shazam.android` | `284993459` | Up to 500 |
+| Travel & Mobility | Waze | `com.waze` | `323229106` | Up to 500 |
+| Social & Community | Instagram | `com.instagram.android` | `389801252` | Up to 500 |
+| Productivity & Cloud | Google Drive | `com.google.android.apps.docs` | `507874739` | Up to 500 |
 
 ### Sampling Rationale
 
@@ -86,8 +86,8 @@ Using the same applications on both Google Play Store and Apple App Store will a
 
 | Platform | Apps | Target per App | Approximate Total |
 |---|---:|---:|---:|
-| Google Play Store | 24 | Up to 500 | 12,000 |
-| Apple App Store | 24 | Up to 500 | 12,000 |
+| Google Play Store | 28 | Up to 500 | Up to 14,000 |
+| Apple App Store | 28 | Up to 500 | Up to 14,000 |
 
 Actual review counts may vary if fewer than 500 unique reviews are available through the collection method for a particular application.
 
@@ -150,6 +150,8 @@ Raw collected data will be stored separately by platform:
 - `data/raw/apple_store_reviews.csv`
 
 Raw collected data will be preserved without deduplication. Duplicate review IDs identified during collection will be documented and handled separately during data processing and EDA.
+
+Repeated collection runs also showed that review availability through the Apple feed can vary over time. Some applications that initially returned limited or no review pages later returned substantially more reviews. This variability will be treated as an observed limitation of the collection method.
 
 The collection scripts should:
 
