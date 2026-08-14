@@ -2,14 +2,19 @@ import requests
 import pandas as pd
 from datetime import datetime
 import time
+import os
+import shutil
 
 
-# --------------------------------------------------
+# ==================================================
 # Configuration
-# --------------------------------------------------
+# ==================================================
 
 apps = [
+
+    # --------------------------------------------------
     # Music & Audio
+    # --------------------------------------------------
     {
         "app_name": "Spotify",
         "app_id": "324684580",
@@ -30,8 +35,15 @@ apps = [
         "app_id": "284035177",
         "category": "Music & Audio"
     },
+    {
+        "app_name": "Shazam",
+        "app_id": "284993459",
+        "category": "Music & Audio"
+    },
 
+    # --------------------------------------------------
     # Travel & Mobility
+    # --------------------------------------------------
     {
         "app_name": "Uber",
         "app_id": "368677368",
@@ -52,8 +64,15 @@ apps = [
         "app_id": "367003839",
         "category": "Travel & Mobility"
     },
+    {
+        "app_name": "Waze",
+        "app_id": "323229106",
+        "category": "Travel & Mobility"
+    },
 
+    # --------------------------------------------------
     # Social & Community
+    # --------------------------------------------------
     {
         "app_name": "Reddit",
         "app_id": "1064216828",
@@ -74,8 +93,15 @@ apps = [
         "app_id": "985746746",
         "category": "Social & Community"
     },
+    {
+        "app_name": "Instagram",
+        "app_id": "389801252",
+        "category": "Social & Community"
+    },
 
+    # --------------------------------------------------
     # Education
+    # --------------------------------------------------
     {
         "app_name": "Duolingo",
         "app_id": "570060128",
@@ -97,7 +123,9 @@ apps = [
         "category": "Education"
     },
 
+    # --------------------------------------------------
     # Finance
+    # --------------------------------------------------
     {
         "app_name": "PayPal",
         "app_id": "283646709",
@@ -119,7 +147,9 @@ apps = [
         "category": "Finance"
     },
 
+    # --------------------------------------------------
     # Productivity & Cloud
+    # --------------------------------------------------
     {
         "app_name": "Notion",
         "app_id": "1232780281",
@@ -139,18 +169,75 @@ apps = [
         "app_name": "Microsoft OneDrive",
         "app_id": "477537958",
         "category": "Productivity & Cloud"
+    },
+    {
+        "app_name": "Google Drive",
+        "app_id": "507874739",
+        "category": "Productivity & Cloud"
     }
 ]
 
+
 COUNTRY = "us"
 MAX_PAGES = 10
+REQUEST_DELAY = 0.5
+
+OUTPUT_PATH = "data/raw/apple_store_reviews.csv"
+PROGRESS_PATH = "data/raw/apple_store_reviews_progress.csv"
+SUMMARY_PATH = "data/raw/apple_store_collection_summary.csv"
 
 all_rows = []
+collection_summary = []
 
 
-# --------------------------------------------------
+# ==================================================
+# Backup existing final dataset
+# ==================================================
+
+if os.path.exists(OUTPUT_PATH):
+
+    os.makedirs(
+        "data/raw/archive",
+        exist_ok=True
+    )
+
+    backup_timestamp = datetime.now().strftime(
+        "%Y%m%d_%H%M%S"
+    )
+
+    backup_path = (
+        "data/raw/archive/"
+        f"apple_store_reviews_{backup_timestamp}.csv"
+    )
+
+    shutil.copy2(
+        OUTPUT_PATH,
+        backup_path
+    )
+
+    print(
+        f"Existing Apple dataset backed up to:\n"
+        f"{backup_path}\n"
+    )
+
+
+# ==================================================
+# HTTP Session
+# ==================================================
+
+session = requests.Session()
+
+session.headers.update({
+    "User-Agent": (
+        "Mozilla/5.0 "
+        "(compatible; review-data-source-assessment)"
+    )
+})
+
+
+# ==================================================
 # Collection
-# --------------------------------------------------
+# ==================================================
 
 for app in apps:
 
@@ -159,26 +246,32 @@ for app in apps:
     print("=" * 60)
 
     app_rows = []
+    pages_collected = 0
 
     for page in range(1, MAX_PAGES + 1):
 
         url = (
             f"https://itunes.apple.com/{COUNTRY}/rss/"
             f"customerreviews/page={page}/"
-            f"id={app['app_id']}/sortby=mostrecent/json"
+            f"id={app['app_id']}/"
+            f"sortby=mostrecent/json"
         )
 
         try:
-            response = requests.get(
+
+            response = session.get(
                 url,
                 timeout=20
             )
 
         except Exception as e:
+
             print(
                 f"Request error on page {page}: {e}"
             )
+
             break
+
 
         print(
             f"{app['app_name']} | "
@@ -186,41 +279,61 @@ for app in apps:
             f"Status: {response.status_code}"
         )
 
+
         if response.status_code != 200:
+
             print(
                 f"Stopped {app['app_name']} "
                 f"at page {page}."
             )
+
             break
 
+
         try:
+
             data = response.json()
 
         except Exception as e:
+
             print(
-                f"JSON error on page {page}: {e}"
+                f"JSON parsing error on page "
+                f"{page}: {e}"
             )
+
             break
+
 
         entries = (
             data.get("feed", {})
             .get("entry", [])
         )
 
+
         if not entries:
+
             print(
                 f"No reviews returned on page {page}."
             )
+
             break
 
+
+        pages_collected += 1
+
         collection_time = datetime.now()
+
 
         for review in entries:
 
             app_rows.append({
+
                 "platform": "Apple App Store",
+
                 "app_name": app["app_name"],
+
                 "app_id": app["app_id"],
+
                 "category": app["category"],
 
                 "review_id": (
@@ -266,25 +379,36 @@ for app in apps:
 
                 "source_page": page,
 
-                "collection_timestamp": collection_time
+                "collection_timestamp": (
+                    collection_time
+                )
             })
+
 
         print(
             f"{app['app_name']}: "
-            f"{len(app_rows)} raw reviews collected so far"
+            f"{len(app_rows)} raw reviews "
+            f"collected so far"
         )
 
-        time.sleep(0.5)
+
+        time.sleep(REQUEST_DELAY)
 
 
-    # Add this app to combined dataset
-    all_rows.extend(app_rows)
+    # ==================================================
+    # Per-app summary
+    # ==================================================
 
-    app_df = pd.DataFrame(app_rows)
+    if app_rows:
 
-    if not app_df.empty:
+        app_df = pd.DataFrame(app_rows)
 
-        unique_ids = app_df["review_id"].nunique()
+        raw_rows = len(app_df)
+
+        unique_ids = (
+            app_df["review_id"]
+            .nunique()
+        )
 
         duplicate_ids = (
             app_df["review_id"]
@@ -292,72 +416,153 @@ for app in apps:
             .sum()
         )
 
+
+        review_dates = pd.to_datetime(
+            app_df["review_date"],
+            errors="coerce",
+            utc=True
+        )
+
+
+        earliest_date = (
+            review_dates.min()
+        )
+
+        latest_date = (
+            review_dates.max()
+        )
+
+
         print(
             f"\nFinished {app['app_name']}: "
-            f"{len(app_df)} raw rows | "
+            f"{raw_rows} raw rows | "
             f"{unique_ids} unique IDs | "
             f"{duplicate_ids} duplicate IDs"
         )
 
+
     else:
+
+        raw_rows = 0
+        unique_ids = 0
+        duplicate_ids = 0
+        earliest_date = None
+        latest_date = None
+
         print(
             f"\nFinished {app['app_name']}: "
-            "0 reviews collected"
+            f"0 reviews collected"
         )
 
 
+    collection_summary.append({
+
+        "app_name": app["app_name"],
+
+        "app_id": app["app_id"],
+
+        "category": app["category"],
+
+        "pages_collected": pages_collected,
+
+        "raw_rows": raw_rows,
+
+        "unique_review_ids": unique_ids,
+
+        "duplicate_review_ids": duplicate_ids,
+
+        "earliest_review_date": earliest_date,
+
+        "latest_review_date": latest_date
+    })
+
+
+    all_rows.extend(app_rows)
+
+
+    # ==================================================
     # Save progress after every app
-    progress_df = pd.DataFrame(all_rows)
+    # ==================================================
+
+    progress_df = pd.DataFrame(
+        all_rows
+    )
 
     progress_df.to_csv(
-        "data/raw/apple_store_reviews_progress.csv",
+        PROGRESS_PATH,
         index=False
     )
+
+
+    summary_df = pd.DataFrame(
+        collection_summary
+    )
+
+    summary_df.to_csv(
+        SUMMARY_PATH,
+        index=False
+    )
+
 
     print("Progress saved.")
 
 
-# --------------------------------------------------
-# Final Dataset
-# --------------------------------------------------
+# ==================================================
+# Final raw dataset
+# ==================================================
 
-df = pd.DataFrame(all_rows)
-
-output_path = "data/raw/apple_store_reviews.csv"
+df = pd.DataFrame(
+    all_rows
+)
 
 df.to_csv(
-    output_path,
+    OUTPUT_PATH,
     index=False
 )
 
 
-# --------------------------------------------------
-# Validation Summary
-# --------------------------------------------------
+# ==================================================
+# Final collection summary
+# ==================================================
 
-print("\n\n" + "=" * 60)
+summary_df = pd.DataFrame(
+    collection_summary
+)
+
+summary_df.to_csv(
+    SUMMARY_PATH,
+    index=False
+)
+
+
+print("\n\n" + "=" * 70)
 print("APPLE APP STORE COLLECTION SUMMARY")
-print("=" * 60)
+print("=" * 70)
+
+
+print("\nTotal apps attempted:")
+print(len(apps))
+
+
+print("\nApps with reviews:")
+print(
+    (summary_df["raw_rows"] > 0).sum()
+)
+
+
+print("\nApps with zero reviews:")
+print(
+    (summary_df["raw_rows"] == 0).sum()
+)
+
 
 print("\nTotal raw rows:")
 print(len(df))
 
 
-print("\nRaw rows by app:")
+print("\nTotal unique review IDs:")
 print(
-    df["app_name"]
-    .value_counts()
-    .sort_index()
-)
-
-
-print("\nUnique review IDs by app:")
-print(
-    df.groupby("app_name")[
-        "review_id"
-    ]
-    .nunique()
-    .sort_index()
+    df["review_id"].nunique()
 )
 
 
@@ -377,21 +582,69 @@ print(
 )
 
 
+# ==================================================
+# Raw rows by app
+# ==================================================
+
+print("\nRaw rows by app:")
+
+print(
+    summary_df[
+        [
+            "app_name",
+            "raw_rows"
+        ]
+    ]
+    .sort_values(
+        "raw_rows",
+        ascending=False
+    )
+    .to_string(index=False)
+)
+
+
+# ==================================================
+# Unique IDs by app
+# ==================================================
+
+print("\nUnique review IDs by app:")
+
+print(
+    summary_df[
+        [
+            "app_name",
+            "unique_review_ids"
+        ]
+    ]
+    .sort_values(
+        "unique_review_ids",
+        ascending=False
+    )
+    .to_string(index=False)
+)
+
+
+# ==================================================
+# Missing values
+# ==================================================
+
 print("\nMissing values:")
+
 print(
     df.isnull()
     .sum()
 )
 
 
-# --------------------------------------------------
+# ==================================================
 # Rating
-# --------------------------------------------------
+# ==================================================
 
 df["rating_numeric"] = pd.to_numeric(
     df["rating"],
     errors="coerce"
 )
+
 
 print("\nRating distribution by app:")
 
@@ -403,9 +656,9 @@ print(
 )
 
 
-# --------------------------------------------------
-# Review Length
-# --------------------------------------------------
+# ==================================================
+# Review length
+# ==================================================
 
 df["review_length"] = (
     df["review_text"]
@@ -413,19 +666,20 @@ df["review_length"] = (
     .str.len()
 )
 
+
 print("\nReview length by app:")
 
 print(
-    df.groupby("app_name")[
-        "review_length"
-    ]
+    df.groupby(
+        "app_name"
+    )["review_length"]
     .describe()
 )
 
 
-# --------------------------------------------------
-# Date Coverage
-# --------------------------------------------------
+# ==================================================
+# Date coverage
+# ==================================================
 
 df["review_date_parsed"] = pd.to_datetime(
     df["review_date"],
@@ -433,17 +687,22 @@ df["review_date_parsed"] = pd.to_datetime(
     utc=True
 )
 
+
 print("\nDate range by app:")
 
-for app_name, group in df.groupby("app_name"):
+for app_name, group in df.groupby(
+    "app_name"
+):
 
-    earliest = group[
-        "review_date_parsed"
-    ].min()
+    earliest = (
+        group["review_date_parsed"]
+        .min()
+    )
 
-    latest = group[
-        "review_date_parsed"
-    ].max()
+    latest = (
+        group["review_date_parsed"]
+        .max()
+    )
 
     print(
         f"{app_name}"
@@ -452,22 +711,32 @@ for app_name, group in df.groupby("app_name"):
     )
 
 
-# --------------------------------------------------
-# Duplicate Page Check
-# --------------------------------------------------
+# ==================================================
+# Pagination duplicate examples
+# ==================================================
 
 duplicate_rows = df[
     df["review_id"]
-    .duplicated(keep=False)
+    .duplicated(
+        keep=False
+    )
 ].sort_values(
-    ["app_name", "review_id", "source_page"]
+    [
+        "app_name",
+        "review_id",
+        "source_page"
+    ]
 )
+
 
 print("\nPagination duplicate examples:")
 
+
 if duplicate_rows.empty:
 
-    print("No duplicate review IDs found.")
+    print(
+        "No duplicate review IDs found."
+    )
 
 else:
 
@@ -480,10 +749,49 @@ else:
                 "review_date"
             ]
         ]
-        .head(20)
-        .to_string(index=False)
+        .head(30)
+        .to_string(
+            index=False
+        )
     )
 
 
-print("\nFinal raw dataset saved to:")
-print(output_path)
+# ==================================================
+# Target check
+# ==================================================
+
+print("\n" + "=" * 70)
+print("TARGET CHECK")
+print("=" * 70)
+
+
+if len(df) >= 10000:
+
+    print(
+        f"SUCCESS: {len(df)} raw reviews collected."
+    )
+
+    print(
+        "Apple dataset is within the "
+        "target range of 10,000–20,000 reviews."
+    )
+
+else:
+
+    remaining = 10000 - len(df)
+
+    print(
+        f"Current total: {len(df)} reviews."
+    )
+
+    print(
+        f"Approximately {remaining} additional "
+        f"reviews are needed to reach 10,000."
+    )
+
+
+print("\nFinal raw dataset:")
+print(OUTPUT_PATH)
+
+print("\nCollection summary:")
+print(SUMMARY_PATH)
