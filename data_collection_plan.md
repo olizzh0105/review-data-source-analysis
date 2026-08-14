@@ -77,6 +77,7 @@ Using the same applications on both Google Play Store and Apple App Store will a
 
 Actual review counts may vary if fewer than 500 unique reviews are available through the collection method for a particular application.
 
+The goal is to remain within the requested range of approximately 10,000–20,000 reviews per platform while maintaining broad coverage across applications and categories.
 ---
 
 ## Expected Fields
