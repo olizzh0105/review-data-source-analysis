@@ -1,13 +1,20 @@
-# Review Data Source Assessment
+# Review Data Source Assessment and Cross-Platform Review Analysis
 
-This project evaluates **Amazon, Google Play Store, and Apple App Store** as potential sources for building a recurring review-data ingestion workflow for downstream sentiment analysis.
+This project evaluates and analyzes user-review data sources for downstream sentiment and product analysis.
 
-The assessment combines **business evaluation, technical research, and lightweight practical testing** to identify the source that provides the strongest balance between analytical value and implementation feasibility.
+The project is organized into two phases:
+
+- **Phase I – Data Source Assessment:** evaluates Amazon, Google Play Store, and Apple App Store from business, technical, and practical perspectives.
+- **Phase II – Large-Scale Collection and Analysis:** builds matched Google Play Store and Apple App Store review datasets and conducts app-level, category-level, and cross-platform exploratory analysis.
+
+Phase I identified Google Play Store as the strongest initial source for a recurring review-data workflow. Phase II expands the analysis by using both Google Play Store and Apple App Store in parallel to better understand differences in ratings, review quality, metadata availability, and user-feedback patterns.
 
 > [!NOTE]
-> **Recommended initial source: Google Play Store**
+> **Phase I Recommendation: Google Play Store**
 >
-> Based on the current assessment and practical testing, both Google Play Store and Apple App Store demonstrated successful lightweight review extraction. Google Play Store is recommended because it provides the strongest overall balance of review richness, technical metadata, repeatability, extraction feasibility, and downstream analytical potential.
+> Phase I recommended Google Play Store as the strongest initial source based on review richness, metadata availability, repeatability, extraction feasibility, and downstream analytical potential.
+>
+> Phase II extends the project by analyzing **Google Play Store and Apple App Store in parallel** using matched samples from the same applications.
 
 ---
 
@@ -19,12 +26,17 @@ The assessment combines **business evaluation, technical research, and lightweig
 - [Data Sources](#data-sources)
 - [Practical Testing](#practical-testing)
 - [Key Results](#key-results)
+- [Phase II: Large-Scale Collection and Analysis](#phase-ii-large-scale-collection-and-analysis)
+- [Phase II Dataset](#phase-ii-dataset)
+- [Analysis Structure](#analysis-structure)
+- [Preliminary Findings](#preliminary-findings)
 - [Repository Structure](#repository-structure)
 - [Installation](#installation)
-- [Running the Tests](#running-the-tests)
-- [Recommendation](#recommendation)
+- [Running the Project](#running-the-project)
+- [Phase I Recommendation](#phase-i-recommendation)
 - [Limitations](#limitations)
 - [Next Steps](#next-steps)
+- [Project Status](#project-status)
 
 ---
 
@@ -204,6 +216,117 @@ The detailed reasoning behind these assessments is documented in [`assessment.md
 
 ---
 
+## Phase II: Large-Scale Collection and Analysis
+
+Following the Phase I source assessment, Phase II expands the project into large-scale review collection and exploratory analysis using Google Play Store and Apple App Store in parallel.
+
+The Phase II design emphasizes **paired comparisons of the same applications across platforms** rather than relying only on platform-wide averages.
+
+### Sampling Design
+
+The final sampling design includes:
+
+- 28 shared applications
+- 6 application categories
+- Google Play Store and Apple App Store
+- Matched review counts at the application level
+
+The six study categories are:
+
+- Education
+- Finance
+- Music & Audio
+- Productivity & Cloud
+- Social & Community
+- Travel & Mobility
+
+---
+
+## Phase II Dataset
+
+Large raw datasets were first collected separately from each platform.
+
+The datasets were then processed to:
+
+- Remove duplicate review IDs from the analysis samples
+- Match review counts for the same application across platforms
+- Preserve the original raw datasets separately
+- Maintain application and category identifiers for paired analysis
+
+Final matched analysis datasets:
+
+| Platform | Apps | Reviews |
+|---|---:|---:|
+| Apple App Store | 28 | 13,599 |
+| Google Play Store | 28 | 13,599 |
+
+Matching review counts improves same-app comparability, but does **not** guarantee that the two platforms represent the same historical time window.
+
+---
+
+## Analysis Structure
+
+Phase II analysis is organized into three notebooks.
+
+### `01_data_quality.ipynb`
+
+Examines:
+
+- Missing values
+- Duplicate review IDs
+- Repeated review text
+- Rating distributions
+- Review length
+- Low-information comments
+- Timestamp coverage
+- Metadata availability
+
+### `02_paired_app_analysis.ipynb`
+
+Focuses on paired comparisons of the same applications across platforms, including:
+
+- Cross-platform rating gaps
+- Timestamp-coverage diagnostics
+- Rating distributions for selected paired apps
+- Review length and low-signal differences
+- Negative-review detail
+- Product/business implications
+
+### `03_category_analysis.ipynb`
+
+Examines whether app-level differences extend to broader categories, including:
+
+- Category-level rating differences
+- Consistency of rating direction within categories
+- Timestamp sensitivity analysis
+- Category-level review quality
+- Short-review and repeated-text patterns
+
+---
+
+## Preliminary Findings
+
+Current Phase II analysis suggests:
+
+- Cross-platform rating differences are highly application-specific and should not be interpreted using platform-wide averages alone.
+- Finance shows one of the more robust category-level Google-higher rating patterns after considering timestamp comparability.
+- Social & Community also shows consistently higher Google Play ratings, although substantial timestamp mismatch limits stronger interpretation.
+- Apple App Store reviews are longer across all six study categories in the current matched sample.
+- Google Play contains a higher proportion of very short and repeated review text across all six categories.
+- Lower-rated reviews generally contain more detailed written feedback on both platforms.
+- Equal review counts can represent substantially different historical time windows across platforms.
+- Platform-specific metadata availability affects which downstream analyses are appropriate.
+
+These findings are descriptive and should not be interpreted as causal platform effects.
+
+### Business Relevance
+
+The analysis suggests that platform choice may affect both observed sentiment and the amount of diagnostic information available in individual reviews.
+
+Apple reviews may provide richer written context per review, while Google Play may require stronger filtering for short or repetitive feedback before text-based sentiment analysis.
+
+At the same time, paired app analysis shows that no single platform consistently produces more positive or negative feedback across all applications. Product teams may therefore benefit from evaluating the same application across both platforms rather than relying on a single platform-wide benchmark.
+
 ## Repository Structure
 
 ```text
@@ -211,47 +334,83 @@ review-data-source-assessment/
 │
 ├── README.md
 ├── assessment.md
+├── data_collection_plan.md
 │
 ├── scripts/
 │   ├── practical_test.py
-│   └── review_extraction_test.py
+│   ├── review_extraction_test.py
+│   ├── collect_google_play.py
+│   ├── collect_google_play_multiapp.py
+│   ├── collect_google_play_full.py
+│   ├── collect_google_play_balanced.py
+│   ├── collect_apple_store.py
+│   ├── collect_apple_store_multiapp.py
+│   ├── collect_apple_store_full.py
+│   └── build_balanced_analysis_datasets.py
+│
+├── notebooks/
+│   ├── 01_data_quality.ipynb
+│   ├── 02_paired_app_analysis.ipynb
+│   └── 03_category_analysis.ipynb
 │
 └── data/
+    ├── raw/
+    │   ├── google_play_reviews.csv
+    │   ├── google_play_balanced_reviews.csv
+    │   ├── apple_store_reviews.csv
+    │   └── collection summary / validation outputs
+    │
+    ├── processed/
+    │   ├── google_play_analysis.csv
+    │   ├── apple_store_analysis.csv
+    │   └── matched_sample_counts.csv
+    │
     ├── practical_test_results.csv
     ├── field_availability_results.csv
     └── review_extraction_results.csv
 ```
 
-### Files
+### Key Files
 
 #### `assessment.md`
 
-Contains the full comparison of Amazon, Google Play Store, and Apple App Store, including:
+Contains the full Phase I comparison of Amazon, Google Play Store, and Apple App Store, including business assessment, technical assessment, practical testing, and the initial source recommendation.
 
-- Business assessment
-- Technical assessment
-- Practical testing
-- Comparative evaluation
-- Final recommendation
-- Next steps
+#### `data_collection_plan.md`
 
-#### `scripts/practical_test.py`
+Documents the Phase II sampling strategy, selected applications, expected fields, collection methodology, and data-quality considerations.
 
-Performs lightweight testing for:
+#### `scripts/`
 
-- HTTP accessibility
-- Page size
-- Page title
-- Review-related content
-- Review-field availability
+Contains the Phase I feasibility tests, Phase II review-collection scripts, and dataset-preparation workflows.
 
-#### `scripts/review_extraction_test.py`
+Key Phase II scripts include:
 
-Attempts to identify candidate individual review blocks using public webpage HTML and `BeautifulSoup`.
+- `collect_google_play_balanced.py` – collects reviews across the shared Google Play app sample
+- `collect_apple_store_full.py` – collects the large-scale Apple App Store sample
+- `build_balanced_analysis_datasets.py` – creates the matched datasets used for cross-platform analysis
 
-#### `data/`
+Earlier single-app and multi-app scripts are retained to document the development and validation of the collection workflow.
 
-Contains CSV outputs generated from the practical testing scripts.
+#### `notebooks/01_data_quality.ipynb`
+
+Examines missing values, duplicates, repeated text, rating distributions, review length, timestamp coverage, and metadata availability.
+
+#### `notebooks/02_paired_app_analysis.ipynb`
+
+Performs paired same-app comparisons across Google Play Store and Apple App Store.
+
+#### `notebooks/03_category_analysis.ipynb`
+
+Examines category-level consistency, timestamp sensitivity, and review-quality patterns.
+
+#### `data/raw/`
+
+Contains the original large-scale collection outputs.
+
+#### `data/processed/`
+
+Contains the cleaned and matched datasets used for the main Phase II analysis.
 
 ---
 
@@ -260,65 +419,104 @@ Contains CSV outputs generated from the practical testing scripts.
 ### Requirements
 
 - Python 3
+- Pandas
 - Requests
 - BeautifulSoup4
-- Pandas
+- Matplotlib
+- Jupyter / IPython kernel
+- google-play-scraper
 
 Install the required packages:
 
 ```bash
-python -m pip install requests beautifulsoup4 pandas
+python -m pip install pandas requests beautifulsoup4 matplotlib jupyter ipykernel google-play-scraper
 ```
 
 ---
 
-## Running the Tests
+## Running the Project
 
-### Basic Accessibility and Field Test
+The repository contains both Phase I feasibility tests and Phase II large-scale collection and analysis workflows.
+
+### Phase I: Practical Tests
+
+Run the basic accessibility and field-availability test:
 
 ```bash
 python scripts/practical_test.py
 ```
 
-This generates:
-
-```text
-data/practical_test_results.csv
-data/field_availability_results.csv
-```
-
-### Small Review Extraction Test
+Run the lightweight review extraction test:
 
 ```bash
 python scripts/review_extraction_test.py
 ```
 
-This generates:
+### Phase II: Review Collection
+
+#### Google Play Store
+
+```bash
+python scripts/collect_google_play_balanced.py
+```
+
+Primary output:
 
 ```text
-data/review_extraction_results.csv
+data/raw/google_play_balanced_reviews.csv
+```
+
+#### Apple App Store
+
+```bash
+python scripts/collect_apple_store_full.py
+```
+
+Primary output:
+
+```text
+data/raw/apple_store_reviews.csv
+```
+
+### Build Matched Analysis Datasets
+
+```bash
+python scripts/build_balanced_analysis_datasets.py
+```
+
+This creates:
+
+```text
+data/processed/apple_store_analysis.csv
+data/processed/google_play_analysis.csv
+data/processed/matched_sample_counts.csv
+```
+
+### Phase II Analysis
+
+The main exploratory analysis is contained in:
+
+```text
+notebooks/01_data_quality.ipynb
+notebooks/02_paired_app_analysis.ipynb
+notebooks/03_category_analysis.ipynb
 ```
 
 ---
 
-## Recommendation
+## Phase I Recommendation
 
 ### Google Play Store
 
-Based on the combined business assessment, technical research, and practical testing, **Google Play Store is recommended as the initial data source for a prototype recurring ingestion workflow**.
+Based on the Phase I business assessment, technical research, and practical testing, **Google Play Store was recommended as the initial data source for a prototype recurring ingestion workflow**.
 
-Both Google Play Store and Apple App Store demonstrated successful lightweight review extraction using `requests` and `BeautifulSoup`.
+Both Google Play Store and Apple App Store demonstrated successful lightweight review extraction during the initial feasibility testing.
 
-Google Play Store is preferred because it combines this practical feasibility with richer potential analytical metadata, including app-version, operating-system, device, language, and helpful-vote information.
+Google Play Store was preferred because it combined practical extraction feasibility with richer potential analytical metadata and strong downstream analytical potential.
 
-This creates broader opportunities for downstream analysis such as:
+This recommendation served as the starting point for the project rather than a final production-scale source-selection decision.
 
-- Sentiment analysis
-- Version-level sentiment tracking
-- Technical issue identification
-- Feature and pain-point analysis
-- Device or operating-system comparisons
-- Trend analysis
+Phase II therefore expanded the project to include **both Google Play Store and Apple App Store in parallel**, allowing the project to evaluate not only collection feasibility but also differences in review content, ratings, metadata, and analytical value at scale.
 
 Amazon remains an attractive future source because of its broad product coverage and rich customer feedback. However, the current testing showed greater technical uncertainty for a simple recurring public-web workflow.
 
@@ -330,56 +528,75 @@ The recommendation should therefore be interpreted as a practical starting point
 
 ## Limitations
 
-This project is an **initial feasibility assessment**, not a production-scale ingestion implementation.
+The project has progressed from an initial feasibility assessment into large-scale exploratory analysis, but several limitations remain.
 
-Current limitations include:
+### Collection Limitations
 
-- One representative page was tested per platform
-- Only a small number of HTTP requests were performed
-- Candidate CSS selectors may change over time
-- Successful extraction was not tested across multiple products or applications
-- Official developer APIs may provide different capabilities for applications owned by the organization
-- Platform terms, rate limits, and approved access methods should be reviewed before any production-scale automated collection
+- Public review-access methods may change over time.
+- Platform pagination and review availability are not always stable.
+- The Apple App Store review feed showed variation in available review depth across collection attempts.
+- Google Play and Apple App Store expose different metadata fields, limiting direct comparison of some attributes.
+- Public collection methods may not provide the same capabilities as official owner/developer APIs.
 
-The practical results should therefore be interpreted as **comparative evidence for selecting an initial prototype source**, rather than proof of long-term production reliability.
+### Sampling Limitations
+
+- Review counts are matched by application, but matching record counts does not guarantee matching time periods.
+- In many applications, the same number of Apple and Google reviews represents substantially different historical coverage.
+- Some applications had fewer available Apple reviews and therefore contributed smaller matched samples.
+
+### Analytical Limitations
+
+- Observed cross-platform differences are descriptive and should not be interpreted as causal platform effects.
+- Differences may reflect app-specific events, release timing, user populations, platform behavior, or collection characteristics.
+- Repeated review text is not automatically treated as duplicate data because different users may independently submit identical short comments.
+- Low-information thresholds such as reviews with 20 characters or fewer are exploratory analytical definitions rather than formal quality standards.
+
+These limitations are considered throughout the paired-app and category-level analyses.
 
 ---
 
 ## Next Steps
 
-If Google Play Store is selected as the initial source, the next phase should:
+The next stage of the project will build on the Phase II exploratory analysis.
 
-1. Test the extraction approach across multiple applications.
-2. Define a standardized review-data schema.
-3. Extract a larger sample of review records.
-4. Normalize ratings, dates, text, and metadata.
-5. Add basic data-quality validation.
-6. Store cleaned review records in a structured format.
-7. Prototype relational storage using SQLite.
-8. Prepare the dataset for downstream sentiment analysis.
+Potential next steps include:
 
-A possible future workflow is:
+1. Consolidate the strongest app-level and category-level findings into a final analytical summary.
+2. Create publication-ready figures for the most important cross-platform comparisons.
+3. Investigate review content more deeply using text-based methods such as sentiment, topic, or issue analysis.
+4. Examine whether major rating or sentiment changes align with application-version changes where metadata is available.
+5. Develop platform-specific preprocessing rules for short, repetitive, or low-information reviews.
+6. Evaluate whether timestamp-aligned sampling improves cross-platform comparability.
+7. Identify which review source or combination of sources is most appropriate for different downstream product-analysis objectives.
+
+A potential future workflow is:
 
 ```text
-Review Source
-     ↓
-Data Collection
-     ↓
-Cleaning & Validation
-     ↓
-Structured Storage
-     ↓
-Sentiment Analysis
-     ↓
-Business Insights
+Review Sources
+      ↓
+Large-Scale Collection
+      ↓
+Quality Validation
+      ↓
+Matched Cross-Platform Analysis
+      ↓
+Text / Sentiment Analysis
+      ↓
+Product & Business Insights
 ```
 
 ---
 
 ## Project Status
 
-**Current Phase:** Data source assessment and feasibility testing
+**Phase I:** Completed – Data source assessment and feasibility testing
 
-**Recommended Source:** Google Play Store
+**Phase I Recommendation:** Google Play Store as the initial prototype source
 
-**Next Phase:** Small repeatable ingestion prototype
+**Phase II:** In Progress – Large-scale Google Play and Apple App Store collection, matched dataset construction, and exploratory cross-platform analysis
+
+**Current Analysis:** Data quality, paired same-app comparison, timestamp sensitivity, and category-level analysis
+
+**Current Dataset:** 28 shared applications across 6 categories, with 13,599 matched reviews per platform
+
+**Next Focus:** Consolidating analytical findings and preparing deeper text-based and product-oriented analysis
