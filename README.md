@@ -327,6 +327,8 @@ Apple reviews may provide richer written context per review, while Google Play m
 
 At the same time, paired app analysis shows that no single platform consistently produces more positive or negative feedback across all applications. Product teams may therefore benefit from evaluating the same application across both platforms rather than relying on a single platform-wide benchmark.
 
+---
+
 ## Repository Structure
 
 ```text
@@ -335,6 +337,7 @@ review-data-source-assessment/
 ├── README.md
 ├── assessment.md
 ├── data_collection_plan.md
+├── phase_ii_findings.md
 │
 ├── scripts/
 │   ├── practical_test.py
@@ -379,6 +382,10 @@ Contains the full Phase I comparison of Amazon, Google Play Store, and Apple App
 #### `data_collection_plan.md`
 
 Documents the Phase II sampling strategy, selected applications, expected fields, collection methodology, and data-quality considerations.
+
+#### `phase_ii_findings.md`
+
+Consolidates the main Phase II analytical findings across data quality, paired same-app comparisons, category-level patterns, business implications, limitations, and recommended next steps.
 
 #### `scripts/`
 
@@ -522,8 +529,6 @@ Amazon remains an attractive future source because of its broad product coverage
 
 Apple App Store is a strong secondary candidate. It demonstrated successful lightweight review extraction in the representative-page test and offers useful structured review information, including review titles, ratings, dates, written feedback, and territory-related information.
 
-The recommendation should therefore be interpreted as a practical starting point for the initial prototype rather than a final production-scale source-selection decision.
-
 ---
 
 ## Limitations
@@ -561,13 +566,13 @@ The next stage of the project will build on the Phase II exploratory analysis.
 
 Potential next steps include:
 
-1. Consolidate the strongest app-level and category-level findings into a final analytical summary.
-2. Create publication-ready figures for the most important cross-platform comparisons.
-3. Investigate review content more deeply using text-based methods such as sentiment, topic, or issue analysis.
-4. Examine whether major rating or sentiment changes align with application-version changes where metadata is available.
-5. Develop platform-specific preprocessing rules for short, repetitive, or low-information reviews.
-6. Evaluate whether timestamp-aligned sampling improves cross-platform comparability.
-7. Identify which review source or combination of sources is most appropriate for different downstream product-analysis objectives.
+1. Create publication-ready figures for the strongest Phase II findings.
+2. Investigate review content more deeply using text-based methods such as sentiment, topic, or issue analysis.
+3. Examine whether major rating or sentiment changes align with application-version changes where metadata is available.
+4. Develop platform-specific preprocessing rules for short, repetitive, or low-information reviews.
+5. Evaluate whether timestamp-aligned sampling improves cross-platform comparability.
+6. Compare issue patterns for selected high-value applications across Google Play Store and Apple App Store.
+7. Build product-focused reporting outputs from the strongest analytical findings.
 
 A potential future workflow is:
 
@@ -599,4 +604,4 @@ Product & Business Insights
 
 **Current Dataset:** 28 shared applications across 6 categories, with 13,599 matched reviews per platform
 
-**Next Focus:** Consolidating analytical findings and preparing deeper text-based and product-oriented analysis
+**Next Focus:** Deeper text-based issue analysis, timestamp-aligned comparisons, and product-oriented reporting
