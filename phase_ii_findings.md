@@ -578,9 +578,182 @@ The strongest analytical approach is therefore not to ask whether Google Play or
 
 **Which platform provides the most relevant, comparable, and information-rich feedback for the specific application and business question being investigated?**
 
-## 5. Category-Level Findings
+## 5. Negative Review Issue Analysis
 
-### 5.1 Why Category-Level Analysis Matters
+### 5.1 Objective
+
+The descriptive analysis shows that the same application can receive substantially different ratings across Google Play Store and Apple App Store.
+
+To understand the product issues underlying these rating differences, negative reviews from three paired applications were analyzed:
+
+- Venmo
+- Pandora
+- Lyft
+
+Negative reviews are defined as reviews with ratings of 1 or 2 stars.
+
+A transparent multi-label, keyword-assisted taxonomy was developed through manual review inspection and iterative refinement.
+
+The analysis focuses on issue composition rather than treating the taxonomy as a formally validated machine-learning classifier.
+
+### 5.2 Taxonomy Development
+
+The initial issue taxonomy included broad categories such as:
+
+- Billing / Payment
+- Account / Access
+- Customer Support
+- Technical / App Performance
+- Trust / Safety / Fraud
+- Product Experience / Features
+- Ads / Subscription
+- Service Provider / Fulfillment
+- Core Service Failure
+- Other
+
+Because one review may describe multiple problems, reviews are allowed to receive multiple issue labels.
+
+Manual validation identified missing app-specific complaint language, particularly for Pandora. A refined Version 2 taxonomy was therefore created while preserving Version 1 for comparison.
+
+For Pandora, the share of negative reviews classified only as `Other` decreased from:
+
+| Platform | Version 1 | Version 2 |
+|---|---:|---:|
+| Apple App Store | 32.81% | 12.50% |
+| Google Play | 43.01% | 30.57% |
+
+Representative-review inspection was then used as a qualitative spot check before interpreting the issue-frequency results.
+
+### 5.3 Lyft: Similar Core Problems Across Platforms
+
+Lyft shows a highly similar core complaint structure across platforms.
+
+`Service Provider / Fulfillment` is the dominant negative-review issue on both platforms:
+
+| Issue | Apple | Google Play |
+|---|---:|---:|
+| Service Provider / Fulfillment | 65.69% | 67.92% |
+| Billing / Payment | 38.24% | 40.09% |
+
+The larger differences appear in secondary issues.
+
+Google Play contains relatively more:
+
+- Customer Support complaints: +6.27 percentage points
+- Technical / App Performance complaints: +5.51 percentage points
+- Product Experience / Features complaints: +3.74 percentage points
+
+This suggests that Lyft users on both platforms experience broadly similar core problems involving ride and driver fulfillment, while Google Play negative reviews contain somewhat more support- and technical-related complaints.
+
+### 5.4 Pandora: Different Complaint Composition Across Platforms
+
+Pandora shows the clearest difference in negative-review composition.
+
+Google Play contains more Technical / App Performance complaints:
+
+```text
+Google Play:     33.68%
+Apple App Store: 20.31%
+Difference:     +13.37 percentage points
+```
+
+Apple negative reviews contain substantially more complaints related to:
+
+| Issue | Apple | Google Play |
+|---|---:|---:|
+| Ads / Subscription | 50.00% | 24.87% |
+| Product Experience / Features | 42.19% | 18.13% |
+| Billing / Payment | 18.75% | 10.36% |
+
+This suggests that the nature of dissatisfaction differs across platforms.
+
+Apple feedback is more concentrated around advertising, subscriptions, song selection, skipping, and other product-experience concerns.
+
+Google Play feedback contains a larger concentration of crashes, playback failures, battery consumption, and other technical-performance issues.
+
+Pandora therefore demonstrates that a cross-platform rating difference may reflect not only different levels of dissatisfaction but also different types of product problems.
+
+### 5.5 Venmo: Similar Core Issues With Different Concentrations
+
+Venmo shows a relatively similar core issue structure across platforms.
+
+Billing / Payment is the most common issue on both platforms:
+
+```text
+Apple App Store: 44.04%
+Google Play:     47.79%
+```
+
+Core Service Failure also appears at nearly identical rates:
+
+```text
+Apple App Store: 17.52%
+Google Play:     17.27%
+```
+
+However, Apple negative reviews contain relatively more:
+
+- Account / Access complaints: 43.07% vs 35.74%
+- Technical / App Performance complaints: 16.06% vs 10.84%
+- Customer Support complaints: 27.49% vs 22.89%
+
+The Venmo rating gap therefore does not appear to result from completely different complaint categories.
+
+Instead, the two platforms share many of the same underlying problems, while account-access, support, and technical complaints are more concentrated in the observed Apple negative-review sample.
+
+### 5.6 Cross-App Interpretation
+
+The three applications illustrate different ways that cross-platform rating differences can arise.
+
+**Lyft:**  
+The dominant complaint structure is highly similar across platforms.
+
+**Pandora:**  
+The composition of negative feedback differs substantially across platforms.
+
+**Venmo:**  
+The core complaint categories are similar, but several issue types are more concentrated on Apple.
+
+This distinction is important because average ratings alone cannot determine whether two platforms reflect the same customer problems.
+
+Issue-level analysis helps distinguish between:
+
+```text
+Different rating level
+        ↓
+Same underlying problems
+```
+
+and:
+
+```text
+Different rating level
+        ↓
+Different underlying problems
+```
+
+### 5.7 Product Implication
+
+For product teams, the issue analysis provides a more actionable layer than rating comparison alone.
+
+For example:
+
+- Lyft suggests a cross-platform priority around ride and driver fulfillment.
+- Pandora suggests different platform-specific priorities: product experience and subscriptions on Apple versus technical performance on Google Play.
+- Venmo suggests shared payment-related problems but additional attention to account access and support in the Apple sample.
+
+This type of analysis can help product teams decide whether an issue should be treated as:
+
+- a broad cross-platform product problem
+- a platform-specific technical problem
+- a customer-experience problem concentrated in one user population
+- a temporary issue requiring additional timestamp or version investigation
+
+The issue rates are exploratory and should be interpreted as directional evidence rather than validated population prevalence estimates.
+
+## 6. Category-Level Findings
+
+### 6.1 Why Category-Level Analysis Matters
 
 App-level analysis shows that individual applications can behave very differently across Google Play Store and Apple App Store.
 
@@ -609,7 +782,7 @@ Apple App Store Average Rating
 
 A positive difference indicates a higher Google Play rating.
 
-### 5.2 Category-Level Rating Differences
+### 6.2 Category-Level Rating Differences
 
 Average ratings show noticeable differences across several categories.
 
@@ -626,7 +799,7 @@ At first glance, Social & Community, Finance, and Productivity & Cloud appear to
 
 However, the size and reliability of these category-level differences vary substantially.
 
-### 5.3 Social & Community
+### 6.3 Social & Community
 
 Social & Community shows the strongest directional consistency in the full sample.
 
@@ -662,7 +835,7 @@ The rating direction is therefore highly consistent, but the historical periods 
 
 For this reason, the Social & Community result should be treated as **suggestive rather than conclusive evidence of a broader platform pattern**.
 
-### 5.4 Finance
+### 6.4 Finance
 
 Finance also shows strong directional consistency.
 
@@ -696,7 +869,7 @@ This provides stronger support that the Finance pattern is not entirely explaine
 
 However, applications such as PayPal have much larger differences in historical coverage, so the overall category average should still be interpreted cautiously.
 
-### 5.5 Productivity & Cloud
+### 6.5 Productivity & Cloud
 
 Productivity & Cloud is directionally consistent because all five applications have higher Google Play ratings.
 
@@ -723,7 +896,7 @@ The category therefore shows a consistent direction but not a consistently large
 
 This distinction is important because a category average of +0.59 could otherwise give the impression that most Productivity & Cloud applications differ substantially across platforms.
 
-### 5.6 Travel & Mobility
+### 6.6 Travel & Mobility
 
 Travel & Mobility shows a mixed pattern.
 
@@ -749,7 +922,7 @@ However, because applications move in both directions, this average should not b
 
 Travel & Mobility is a strong example of why category averages should be supported by app-level distributions.
 
-### 5.7 Education
+### 6.7 Education
 
 Education also shows a mixed pattern.
 
@@ -771,7 +944,7 @@ The overall mean difference is only:
 
 Because the four applications split evenly between platforms, there is limited evidence of a stable category-level platform direction.
 
-### 5.8 Music & Audio
+### 6.8 Music & Audio
 
 Music & Audio has almost no aggregate rating difference:
 
@@ -794,7 +967,7 @@ Two applications have higher Google Play ratings, while three have higher Apple 
 
 Music & Audio therefore provides one of the clearest examples of how aggregation can hide meaningful cross-platform variation.
 
-### 5.9 Timestamp Sensitivity Analysis
+### 6.9 Timestamp Sensitivity Analysis
 
 Because equal review counts do not guarantee equal historical coverage, the category analysis was repeated using applications with more comparable time windows.
 
@@ -842,7 +1015,7 @@ Music & Audio shifts toward higher Apple ratings among more time-comparable appl
 
 These results demonstrate that category-level conclusions can change materially when historical coverage is considered.
 
-### 5.10 Category-Level Review Quality
+### 6.10 Category-Level Review Quality
 
 Rating differences vary substantially across categories, but review-text characteristics show a much more consistent pattern.
 
@@ -869,7 +1042,7 @@ Even in Finance, where the difference is smallest, the median Apple review is ap
 
 The largest text-length difference appears in Social & Community, where the Apple median is approximately 3.7 times the Google median.
 
-### 5.11 Short and Repeated Reviews
+### 6.11 Short and Repeated Reviews
 
 Google Play also has consistently higher rates of short and repeated review text.
 
@@ -893,7 +1066,7 @@ Unlike the rating findings, which change substantially depending on application 
 
 This makes review richness one of the strongest cross-platform patterns identified in Phase II.
 
-### 5.12 Category-Level Takeaway
+### 6.12 Category-Level Takeaway
 
 The category analysis produces two different types of findings.
 
@@ -912,9 +1085,9 @@ The key implication is that category-level averages are more reliable for descri
 
 ---
 
-## 6. Business Implications
+## 7. Business Implications
 
-### 6.1 Review Sources Should Be Treated as Complementary
+### 7.1 Review Sources Should Be Treated as Complementary
 
 The Phase II results do not support treating Google Play Store and Apple App Store as interchangeable review datasets.
 
@@ -928,7 +1101,7 @@ A review strategy that relies on only one platform may therefore miss important 
 
 For product teams, using both platforms can provide a more complete view of customer sentiment and product issues.
 
-### 6.2 App-Level Analysis Should Be Prioritized Over Platform-Wide Averages
+### 7.2 App-Level Analysis Should Be Prioritized Over Platform-Wide Averages
 
 One of the strongest findings is that platform-level averages can be misleading.
 
@@ -956,7 +1129,7 @@ All Google Reviews
 
 This produces findings that are more directly relevant to specific products.
 
-### 6.3 Negative Reviews Are Particularly Valuable for Product Diagnosis
+### 7.3 Negative Reviews Are Particularly Valuable for Product Diagnosis
 
 Lower-rated reviews are generally longer than highly positive reviews on both platforms.
 
@@ -974,7 +1147,7 @@ For product teams, this means that 1-star and 2-star reviews may be especially u
 
 Rather than treating all reviews equally, a downstream workflow could prioritize detailed negative reviews for issue identification.
 
-### 6.4 Different Platforms May Require Different Preprocessing
+### 7.4 Different Platforms May Require Different Preprocessing
 
 The review-quality analysis suggests that a single text-processing pipeline may not be equally appropriate for both platforms.
 
@@ -1001,7 +1174,7 @@ This does not mean Apple is universally the better source.
 
 Instead, the two sources may require different preprocessing strategies.
 
-### 6.5 Review Volume and Review Richness Represent Different Types of Value
+### 7.5 Review Volume and Review Richness Represent Different Types of Value
 
 A platform that provides more detailed reviews is not automatically superior for every analytical task.
 
@@ -1023,7 +1196,7 @@ A team monitoring a recent application release may instead prioritize the platfo
 
 Source selection should therefore depend on the analytical objective.
 
-### 6.6 Timestamp Alignment Should Be Part of Cross-Platform Monitoring
+### 7.6 Timestamp Alignment Should Be Part of Cross-Platform Monitoring
 
 The analysis shows that matched review counts can represent very different historical periods.
 
@@ -1052,7 +1225,7 @@ Possible approaches include:
 
 This would make cross-platform comparisons more interpretable for product decisions.
 
-### 6.7 Category Benchmarks Should Be Used Selectively
+### 7.7 Category Benchmarks Should Be Used Selectively
 
 The analysis suggests that some categories may support useful benchmarks while others do not.
 
@@ -1072,7 +1245,7 @@ App-Specific Exception Analysis
 
 rather than reporting only a category average.
 
-### 6.8 Metadata Availability Should Influence Analytical Design
+### 7.8 Metadata Availability Should Influence Analytical Design
 
 The two platforms expose different metadata.
 
@@ -1105,7 +1278,7 @@ Response Rate / Response Timing / Issue Type
 
 Analytical workflows should therefore be designed around the metadata actually available rather than assuming both platforms support identical analysis.
 
-### 6.9 Recommended Review-Analysis Workflow
+### 7.9 Recommended Review-Analysis Workflow
 
 Based on the Phase II findings, a practical product-review workflow could follow:
 
@@ -1129,7 +1302,7 @@ Generate Product-Level Insights
 
 This workflow combines data quality, platform comparability, and product relevance before applying more advanced text analysis.
 
-### 6.10 Overall Business Takeaway
+### 7.10 Overall Business Takeaway
 
 The most important business conclusion from Phase II is that **review-source selection should depend on the product question being asked**.
 
@@ -1155,9 +1328,9 @@ toward a more useful product question:
 
 **"Which combination of review sources provides the most relevant and reliable evidence for the decision we need to make?"**
 
-## 7. Limitations
+## 8. Limitations
 
-### 7.1 Public Collection Methods
+### 8.1 Public Collection Methods
 
 The project relies on publicly accessible review-collection methods rather than privileged owner or developer APIs.
 
@@ -1173,7 +1346,7 @@ The Apple App Store review feed showed noticeable variation in available review 
 
 For this reason, the current collection workflow should be treated as an analytical prototype rather than a production-grade ingestion system.
 
-### 7.2 Different Platform Schemas
+### 8.2 Different Platform Schemas
 
 Google Play Store and Apple App Store do not expose identical review metadata.
 
@@ -1190,7 +1363,7 @@ Because of these differences, not every analytical question can be answered cons
 
 Cross-platform analysis therefore focuses primarily on fields that are observed reliably on both sources.
 
-### 7.3 Matched Counts Do Not Mean Matched Time Periods
+### 8.3 Matched Counts Do Not Mean Matched Time Periods
 
 The processed dataset matches review counts at the application level, but this does not guarantee equivalent historical coverage.
 
@@ -1218,7 +1391,7 @@ Cross-platform rating differences may partly reflect:
 
 Timestamp sensitivity analysis reduces this concern but does not completely eliminate it.
 
-### 7.4 Unequal Review Availability Across Applications
+### 8.4 Unequal Review Availability Across Applications
 
 Although the analysis aims for approximately 500 matched reviews per application, not every application had the same amount of accessible review data.
 
@@ -1228,7 +1401,7 @@ This means that the final dataset is balanced at the paired-app level where poss
 
 Applications with smaller samples may produce less stable estimates than applications with the full target sample.
 
-### 7.5 Category Definitions Are Analytical Groupings
+### 8.5 Category Definitions Are Analytical Groupings
 
 The six categories used in the project are study-level analytical groupings designed to organize applications with broadly similar use cases.
 
@@ -1238,7 +1411,7 @@ Some applications could reasonably fit into more than one category.
 
 Category-level findings should therefore be interpreted as exploratory patterns rather than universal statements about an entire industry segment.
 
-### 7.6 Repeated Text Does Not Necessarily Mean Duplicate Data
+### 8.6 Repeated Text Does Not Necessarily Mean Duplicate Data
 
 Repeated review text is substantially more common on Google Play.
 
@@ -1257,7 +1430,7 @@ For this reason, repeated text was retained in the main analysis unless review I
 
 The repeated-text metric is therefore interpreted as a review-quality or information-density characteristic rather than a definitive duplication measure.
 
-### 7.7 Low-Information Thresholds Are Exploratory
+### 8.7 Low-Information Thresholds Are Exploratory
 
 The analysis uses text-length thresholds such as:
 
@@ -1274,7 +1447,7 @@ A short review may still contain meaningful information, while a long review may
 
 Future text-based analysis should therefore consider semantic information in addition to character count.
 
-### 7.8 Rating Is an Imperfect Measure of Satisfaction
+### 8.8 Rating Is an Imperfect Measure of Satisfaction
 
 Star ratings provide a useful structured measure of user sentiment, but they do not capture all dimensions of customer experience.
 
@@ -1284,7 +1457,7 @@ Similarly, written review content may express a more nuanced opinion than the nu
 
 This limitation reinforces the need for downstream text analysis rather than relying only on rating averages.
 
-### 7.9 Observational Analysis Does Not Establish Causality
+### 8.9 Observational Analysis Does Not Establish Causality
 
 The current study is descriptive and exploratory.
 
@@ -1302,7 +1475,7 @@ Possible contributing factors include:
 
 The analysis therefore identifies patterns that may warrant further investigation rather than causal relationships.
 
-### 7.10 Current Analysis Does Not Yet Examine Review Topics
+### 8.10 Current Analysis Does Not Yet Examine Review Topics
 
 The current Phase II analysis focuses primarily on:
 
@@ -1326,7 +1499,7 @@ For example, the current analysis may identify that Venmo has a large number of 
 
 This represents one of the most important opportunities for the next analytical stage.
 
-### 7.11 Overall Limitation Takeaway
+### 8.11 Overall Limitation Takeaway
 
 The Phase II dataset is sufficiently large and structured to identify meaningful cross-platform patterns, but the results should be interpreted within the constraints of public collection methods, timestamp mismatch, platform-specific metadata, and observational analysis.
 
@@ -1337,9 +1510,9 @@ The current findings are best viewed as:
 
 ---
 
-## 8. Recommended Next Steps
+## 9. Recommended Next Steps
 
-### 8.1 Prioritize Text-Based Analysis
+### 9.1 Prioritize Text-Based Analysis
 
 The highest-value next step is to move from describing review structure to understanding **what users are actually discussing**.
 
@@ -1356,7 +1529,7 @@ The next stage should examine the content of those reviews using methods such as
 
 A practical starting point would be to focus on detailed negative reviews because they contain substantially more text than highly positive reviews.
 
-### 8.2 Build an Issue Taxonomy
+### 9.2 Build an Issue Taxonomy
 
 Before applying more advanced models, the project could develop a simple issue taxonomy for selected applications.
 
@@ -1380,7 +1553,7 @@ This would transform unstructured review text into categories that are more dire
 
 The taxonomy could first be tested manually on a smaller sample and later scaled using automated classification.
 
-### 8.3 Analyze High-Gap Applications First
+### 9.3 Analyze High-Gap Applications First
 
 The paired-app analysis already identifies applications with particularly large or analytically interesting differences.
 
@@ -1400,7 +1573,7 @@ Venmo, Pandora, and Lyft are especially useful candidates because they combine m
 
 These applications provide a practical starting point for deeper review-content analysis.
 
-### 8.4 Compare Product Issues Across Platforms
+### 9.4 Compare Product Issues Across Platforms
 
 For the same application, the next stage could test whether users complain about the same issues on both platforms.
 
@@ -1427,7 +1600,7 @@ to:
 
 **"Why is one platform more negative for this application?"**
 
-### 8.5 Align Samples by Time Period
+### 9.5 Align Samples by Time Period
 
 A future version of the dataset should improve cross-platform comparability by matching reviews using calendar time rather than only review count.
 
@@ -1458,7 +1631,7 @@ Week 2 Apple vs Week 2 Google
 
 Time-aligned sampling would make rating and sentiment comparisons more interpretable.
 
-### 8.6 Investigate Version-Level Changes
+### 9.6 Investigate Version-Level Changes
 
 Application-version metadata creates an opportunity to test whether user feedback changes around software releases.
 
@@ -1482,7 +1655,7 @@ Questions could include:
 
 Because version metadata completeness differs across platforms, this analysis may need to be platform-specific.
 
-### 8.7 Analyze Developer Responses on Google Play
+### 9.7 Analyze Developer Responses on Google Play
 
 Google Play contains developer-response information for a subset of reviews.
 
@@ -1496,7 +1669,7 @@ This could support a separate analysis of:
 
 This would provide a different type of product and customer-experience insight that is not available through the Apple collection method used in this project.
 
-### 8.8 Develop Platform-Specific Preprocessing Rules
+### 9.8 Develop Platform-Specific Preprocessing Rules
 
 The current analysis shows that Google Play contains substantially more short and repeated review text.
 
@@ -1517,7 +1690,7 @@ Possible Apple preprocessing steps include:
 
 Platform-specific preprocessing may improve the quality of downstream sentiment and topic analysis.
 
-### 8.9 Create a Product-Focused Reporting Layer
+### 9.9 Create a Product-Focused Reporting Layer
 
 The final analytical output should be designed around product questions rather than only technical metrics.
 
@@ -1541,7 +1714,7 @@ Potential Product Actions
 
 This would make the analysis easier for non-technical stakeholders to use.
 
-### 8.10 Create Publication-Ready Visualizations
+### 9.10 Create Publication-Ready Visualizations
 
 The current notebooks contain exploratory outputs and figures.
 
@@ -1559,7 +1732,7 @@ Potential figures include:
 
 The objective should be to select a limited number of figures that communicate the strongest business findings rather than including every exploratory chart.
 
-### 8.11 Finalize a Reproducible Analytical Workflow
+### 9.11 Finalize a Reproducible Analytical Workflow
 
 The project should continue separating:
 
@@ -1585,7 +1758,7 @@ Future improvements could include:
 
 This would make future refreshes of the analysis easier and reduce manual work.
 
-### 8.12 Recommended Priority Order
+### 9.12 Recommended Priority Order
 
 Based on the current Phase II findings, the recommended sequence is:
 
@@ -1607,7 +1780,7 @@ Based on the current Phase II findings, the recommended sequence is:
 
 This sequence builds directly on the current evidence while avoiding unnecessary expansion before the strongest findings are fully understood.
 
-### 8.13 Final Recommendation
+### 9.13 Final Recommendation
 
 Phase I identified Google Play Store as the strongest initial source from an ingestion-feasibility perspective.
 
