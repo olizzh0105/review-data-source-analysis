@@ -5,9 +5,9 @@ This project evaluates and analyzes user-review data sources for downstream sent
 The project is organized into two phases:
 
 - **Phase I – Data Source Assessment:** evaluates Amazon, Google Play Store, and Apple App Store from business, technical, and practical perspectives.
-- **Phase II – Large-Scale Collection and Analysis:** builds matched Google Play Store and Apple App Store review datasets and conducts app-level, category-level, and cross-platform exploratory analysis.
+- **Phase II – Large-Scale Collection and Analysis:** builds matched Google Play Store and Apple App Store review datasets and conducts data-quality, app-level, category-level, and issue-level cross-platform analysis.
 
-Phase I identified Google Play Store as the strongest initial source for a recurring review-data workflow. Phase II expands the analysis by using both Google Play Store and Apple App Store in parallel to better understand differences in ratings, review quality, metadata availability, and user-feedback patterns.
+Phase I identified Google Play Store as the strongest initial source for a recurring review-data workflow. Phase II expands the analysis by using both Google Play Store and Apple App Store in parallel to understand differences in ratings, review quality, metadata availability, review timing, and product-issue patterns.
 
 > [!NOTE]
 > **Phase I Recommendation: Google Play Store**
@@ -42,15 +42,15 @@ Phase I identified Google Play Store as the strongest initial source for a recur
 
 ## Overview
 
-The purpose of this project is to assess potential sources of user-generated review data for an AI-powered sentiment analytics workflow.
+The purpose of this project is to evaluate potential sources of user-generated review data and develop a structured workflow for cross-platform product-feedback analysis.
 
-Three platforms were evaluated:
+Three platforms were initially evaluated:
 
 - **Amazon**
 - **Google Play Store**
 - **Apple App Store**
 
-The project focuses on determining whether each source offers:
+Phase I focuses on determining whether each source offers:
 
 - Relevant and sufficiently rich user feedback
 - Useful metadata for downstream analysis
@@ -58,19 +58,29 @@ The project focuses on determining whether each source offers:
 - A reasonably stable and repeatable collection process
 - Suitable structure for future automated ingestion
 
-The full business and technical analysis is available in [`assessment.md`](./assessment.md).
+Phase II then moves beyond source selection into large-scale collection and analytical comparison of Google Play Store and Apple App Store reviews.
+
+The full Phase I business and technical assessment is available in [`assessment.md`](./assessment.md).
+
+The consolidated Phase II analytical findings are available in [`phase_ii_findings.md`](./phase_ii_findings.md).
 
 ---
 
 ## Research Question
 
+### Phase I
+
 **Which of Amazon, Google Play Store, and Apple App Store is the most suitable source for building a recurring review-data ingestion workflow for downstream sentiment analysis?**
+
+### Phase II
+
+**How do review ratings, review quality, metadata, time coverage, and product-issue patterns differ between Google Play Store and Apple App Store for the same applications?**
 
 ---
 
 ## Evaluation Framework
 
-The three platforms were evaluated from two main perspectives.
+The three Phase I platforms were evaluated from two main perspectives.
 
 ### Business Perspective
 
@@ -94,9 +104,10 @@ The three platforms were evaluated from two main perspectives.
 | Recurring Workflow Suitability | Suitability for ongoing automated ingestion |
 
 ---
+
 ## Data Sources
 
-The assessment focuses on publicly visible customer review data from three platforms.
+The Phase I assessment focuses on publicly visible customer review data from three platforms.
 
 | Platform | Data Type | Representative Page Used for Testing |
 |---|---|---|
@@ -116,11 +127,9 @@ The technical assessment also considers official platform documentation related 
 
 - [Amazon Creators API Documentation](https://affiliate-program.amazon.com/creatorsapi/docs/en-us/introduction)
 - [Amazon Creators API Resources](https://affiliate-program.amazon.com/creatorsapi/docs/en-us/api-reference/resources)
-
 - [Google Play Developer API](https://developers.google.com/android-publisher)
 - [Google Play Reviews Resource](https://developers.google.com/android-publisher/api-ref/rest/v3/reviews)
 - [Google Play Reviews List Method](https://developers.google.com/android-publisher/api-ref/rest/v3/reviews/list)
-
 - [Apple App Store Connect API](https://developer.apple.com/documentation/appstoreconnectapi)
 - [Apple Customer Reviews Documentation](https://developer.apple.com/documentation/appstoreconnectapi/customer-reviews)
 - [Apple Customer Reviews API Endpoint](https://developer.apple.com/documentation/appstoreconnectapi/get-v1-apps-_id_-customerreviews)
@@ -129,7 +138,7 @@ The technical assessment also considers official platform documentation related 
 
 ## Practical Testing
 
-In addition to secondary research, several lightweight Python tests were conducted.
+In addition to secondary research, several lightweight Python tests were conducted during Phase I.
 
 The purpose was **not to build a production scraper**, but to compare the initial technical feasibility of the three platforms.
 
@@ -145,8 +154,6 @@ Python `requests` was used to retrieve one representative public page from each 
 
 All three platforms were initially accessible through basic HTTP requests.
 
----
-
 ### 2. Review Field Availability Test
 
 Returned page content was checked for review-related terms such as:
@@ -160,8 +167,6 @@ Returned page content was checked for review-related terms such as:
 
 Google Play Store exposed the broadest range of review-related information in this lightweight test.
 
----
-
 ### 3. Repeatability Test
 
 Repeated HTTP requests produced different results across platforms.
@@ -171,8 +176,6 @@ Google Play Store and Apple App Store returned relatively consistent responses.
 Amazon showed substantially different responses between runs, including one response that returned a much smaller page despite still returning HTTP status code `200`.
 
 This suggests that successful HTTP status alone may not guarantee consistent retrieval of the expected Amazon product page.
-
----
 
 ### 4. Small Review Extraction Test
 
@@ -191,8 +194,6 @@ Results:
 | Amazon | 0 | No |
 
 Both Google Play Store and Apple App Store successfully exposed identifiable individual review blocks through the lightweight HTML extraction approach.
-
-Google Play Store returned three candidate review blocks, while Apple App Store returned eight. The difference in block count should not be interpreted as evidence that one platform is inherently easier to collect, because each page may expose a different number of reviews in its initial HTML response.
 
 Amazon produced a different result. Review-specific elements were visible during manual inspection of the browser-rendered DOM, but the same review containers were not identified in the HTML returned through the basic Python request.
 
@@ -266,7 +267,7 @@ Matching review counts improves same-app comparability, but does **not** guarant
 
 ## Analysis Structure
 
-Phase II analysis is organized into three notebooks.
+Phase II analysis is organized into four notebooks.
 
 ### `01_data_quality.ipynb`
 
@@ -302,6 +303,23 @@ Examines whether app-level differences extend to broader categories, including:
 - Category-level review quality
 - Short-review and repeated-text patterns
 
+### `04_text_issue_analysis.ipynb`
+
+Extends the analysis from ratings and review quality into product-issue analysis of negative reviews.
+
+The notebook includes:
+
+- Negative-review extraction
+- Multi-label issue taxonomy development
+- Version 1 and Version 2 taxonomy comparison
+- Manual taxonomy refinement
+- Qualitative representative-review validation
+- Cross-platform issue-rate comparisons
+- Product-level analysis for Venmo, Pandora, and Lyft
+- Saved issue-profile visualizations
+
+The issue taxonomy is keyword-assisted and exploratory rather than a formally validated supervised classification model.
+
 ---
 
 ## Preliminary Findings
@@ -316,16 +334,84 @@ Current Phase II analysis suggests:
 - Lower-rated reviews generally contain more detailed written feedback on both platforms.
 - Equal review counts can represent substantially different historical time windows across platforms.
 - Platform-specific metadata availability affects which downstream analyses are appropriate.
+- Issue-level analysis shows that cross-platform rating differences can reflect different underlying complaint structures.
 
-These findings are descriptive and should not be interpreted as causal platform effects.
+### Selected Issue-Level Findings
+
+#### Lyft
+
+Lyft shows a highly similar core complaint structure across both platforms.
+
+`Service Provider / Fulfillment` is the dominant issue:
+
+| Platform | Share of Negative Reviews |
+|---|---:|
+| Apple App Store | 65.69% |
+| Google Play | 67.92% |
+
+Billing and payment complaints are also common on both platforms.
+
+This suggests that Lyft's dominant negative-feedback themes are broadly cross-platform rather than specific to one store.
+
+#### Pandora
+
+Pandora shows the clearest difference in complaint composition.
+
+Google Play negative reviews contain more Technical / App Performance complaints:
+
+| Platform | Technical / App Performance |
+|---|---:|
+| Apple App Store | 20.31% |
+| Google Play | 33.68% |
+
+Apple negative reviews contain more:
+
+| Issue | Apple | Google Play |
+|---|---:|---:|
+| Ads / Subscription | 50.00% | 24.87% |
+| Product Experience / Features | 42.19% | 18.13% |
+| Billing / Payment | 18.75% | 10.36% |
+
+This suggests that dissatisfaction with Pandora may involve different underlying product problems across platforms.
+
+#### Venmo
+
+Venmo shows similar core complaint categories across platforms.
+
+Billing / Payment is the most common issue on both:
+
+| Platform | Billing / Payment |
+|---|---:|
+| Apple App Store | 44.04% |
+| Google Play | 47.79% |
+
+However, Apple negative reviews contain relatively more Account / Access, Customer Support, and Technical / App Performance complaints.
+
+This suggests that Venmo's rating gap may reflect different concentrations of similar underlying problems rather than completely different issue types.
 
 ### Business Relevance
 
-The analysis suggests that platform choice may affect both observed sentiment and the amount of diagnostic information available in individual reviews.
+The analysis suggests that platform choice may affect both observed sentiment and the amount and type of diagnostic information available in individual reviews.
 
-Apple reviews may provide richer written context per review, while Google Play may require stronger filtering for short or repetitive feedback before text-based sentiment analysis.
+Apple reviews generally provide more written context, while Google Play contains more short and repeated feedback and may require stronger preprocessing for text analysis.
 
-At the same time, paired app analysis shows that no single platform consistently produces more positive or negative feedback across all applications. Product teams may therefore benefit from evaluating the same application across both platforms rather than relying on a single platform-wide benchmark.
+Issue-level analysis also shows that rating differences alone do not explain whether two platforms reflect the same product problems.
+
+For product teams, the most useful workflow is therefore:
+
+```text
+Same Application
+      ↓
+Apple vs Google
+      ↓
+Rating + Review Quality + Time Coverage
+      ↓
+Negative Review Issues
+      ↓
+Product Interpretation
+```
+
+These findings are descriptive and should not be interpreted as causal platform effects.
 
 ---
 
@@ -354,7 +440,13 @@ review-data-source-assessment/
 ├── notebooks/
 │   ├── 01_data_quality.ipynb
 │   ├── 02_paired_app_analysis.ipynb
-│   └── 03_category_analysis.ipynb
+│   ├── 03_category_analysis.ipynb
+│   └── 04_text_issue_analysis.ipynb
+│
+├── figures/
+│   ├── venmo_negative_issue_profile.png
+│   ├── pandora_negative_issue_profile.png
+│   └── lyft_negative_issue_profile.png
 │
 └── data/
     ├── raw/
@@ -385,7 +477,7 @@ Documents the Phase II sampling strategy, selected applications, expected fields
 
 #### `phase_ii_findings.md`
 
-Consolidates the main Phase II analytical findings across data quality, paired same-app comparisons, category-level patterns, business implications, limitations, and recommended next steps.
+Consolidates the main Phase II analytical findings across data quality, paired same-app comparisons, category-level patterns, negative-review issue analysis, business implications, limitations, and recommended next steps.
 
 #### `scripts/`
 
@@ -410,6 +502,22 @@ Performs paired same-app comparisons across Google Play Store and Apple App Stor
 #### `notebooks/03_category_analysis.ipynb`
 
 Examines category-level consistency, timestamp sensitivity, and review-quality patterns.
+
+#### `notebooks/04_text_issue_analysis.ipynb`
+
+Performs exploratory multi-label issue analysis of negative reviews for selected paired applications.
+
+It includes taxonomy development, manual refinement, representative-review validation, cross-platform issue-rate comparisons, and product-level interpretation.
+
+#### `figures/`
+
+Contains saved Phase II visualizations.
+
+Current issue-profile figures include:
+
+- `venmo_negative_issue_profile.png`
+- `pandora_negative_issue_profile.png`
+- `lyft_negative_issue_profile.png`
 
 #### `data/raw/`
 
@@ -463,6 +571,8 @@ python scripts/review_extraction_test.py
 
 #### Google Play Store
 
+Run the balanced multi-app collection:
+
 ```bash
 python scripts/collect_google_play_balanced.py
 ```
@@ -475,6 +585,8 @@ data/raw/google_play_balanced_reviews.csv
 
 #### Apple App Store
 
+Run the large-scale Apple App Store collection:
+
 ```bash
 python scripts/collect_apple_store_full.py
 ```
@@ -486,6 +598,8 @@ data/raw/apple_store_reviews.csv
 ```
 
 ### Build Matched Analysis Datasets
+
+After collecting the raw datasets, run:
 
 ```bash
 python scripts/build_balanced_analysis_datasets.py
@@ -507,6 +621,21 @@ The main exploratory analysis is contained in:
 notebooks/01_data_quality.ipynb
 notebooks/02_paired_app_analysis.ipynb
 notebooks/03_category_analysis.ipynb
+notebooks/04_text_issue_analysis.ipynb
+```
+
+The analytical progression is:
+
+```text
+Data Quality
+      ↓
+Paired Same-App Analysis
+      ↓
+Category-Level Analysis
+      ↓
+Negative Review Issue Analysis
+      ↓
+Product / Business Interpretation
 ```
 
 ---
@@ -523,11 +652,11 @@ Google Play Store was preferred because it combined practical extraction feasibi
 
 This recommendation served as the starting point for the project rather than a final production-scale source-selection decision.
 
-Phase II therefore expanded the project to include **both Google Play Store and Apple App Store in parallel**, allowing the project to evaluate not only collection feasibility but also differences in review content, ratings, metadata, and analytical value at scale.
+Phase II therefore expanded the project to include **both Google Play Store and Apple App Store in parallel**, allowing the project to evaluate not only collection feasibility but also differences in review content, ratings, metadata, review timing, and product issues at scale.
 
 Amazon remains an attractive future source because of its broad product coverage and rich customer feedback. However, the current testing showed greater technical uncertainty for a simple recurring public-web workflow.
 
-Apple App Store is a strong secondary candidate. It demonstrated successful lightweight review extraction in the representative-page test and offers useful structured review information, including review titles, ratings, dates, written feedback, and territory-related information.
+Apple App Store remains an analytically valuable complementary source, particularly because of the richer review text and highly complete application-version information observed in the current dataset.
 
 ---
 
@@ -549,6 +678,14 @@ The project has progressed from an initial feasibility assessment into large-sca
 - In many applications, the same number of Apple and Google reviews represents substantially different historical coverage.
 - Some applications had fewer available Apple reviews and therefore contributed smaller matched samples.
 
+### Review-Length Limitation
+
+Observed review-length differences may reflect both user behavior and platform or collection characteristics.
+
+The collected Google Play review text shows an apparent ceiling around approximately 500 characters, while Apple reviews can be substantially longer.
+
+The finding that Apple reviews are longer should therefore be interpreted as a characteristic of the observed datasets rather than evidence that Apple users inherently write more detailed reviews.
+
 ### Analytical Limitations
 
 - Observed cross-platform differences are descriptive and should not be interpreted as causal platform effects.
@@ -556,23 +693,39 @@ The project has progressed from an initial feasibility assessment into large-sca
 - Repeated review text is not automatically treated as duplicate data because different users may independently submit identical short comments.
 - Low-information thresholds such as reviews with 20 characters or fewer are exploratory analytical definitions rather than formal quality standards.
 
-These limitations are considered throughout the paired-app and category-level analyses.
+### Issue-Taxonomy Limitations
+
+The negative-review issue taxonomy is:
+
+- Keyword-assisted
+- Multi-label
+- Manually refined
+- Exploratory
+
+Representative reviews were manually inspected to confirm that major categories generally reflected the intended meaning of the review text.
+
+However, the taxonomy has not been evaluated using a manually labeled holdout dataset and does not have formal precision, recall, or F1 measurements.
+
+Issue rates should therefore be interpreted as **directional analytical evidence rather than validated population prevalence estimates**.
+
+These limitations are considered throughout the paired-app, category-level, and issue-level analyses.
 
 ---
 
 ## Next Steps
 
-The next stage of the project will build on the Phase II exploratory analysis.
+The next stage of the project will build on the completed Phase II descriptive and initial issue-level analysis.
 
 Potential next steps include:
 
-1. Create publication-ready figures for the strongest Phase II findings.
-2. Investigate review content more deeply using text-based methods such as sentiment, topic, or issue analysis.
-3. Examine whether major rating or sentiment changes align with application-version changes where metadata is available.
-4. Develop platform-specific preprocessing rules for short, repetitive, or low-information reviews.
-5. Evaluate whether timestamp-aligned sampling improves cross-platform comparability.
-6. Compare issue patterns for selected high-value applications across Google Play Store and Apple App Store.
-7. Build product-focused reporting outputs from the strongest analytical findings.
+1. Expand negative-review issue analysis beyond Venmo, Pandora, and Lyft to additional high-value paired applications.
+2. Improve timestamp alignment by comparing reviews from the same calendar periods across platforms.
+3. Examine whether rating and issue patterns change around application-version releases.
+4. Analyze Google Play developer-response behavior where metadata is available.
+5. Develop more systematic platform-specific preprocessing rules for short, repetitive, or low-information reviews.
+6. Evaluate the issue taxonomy against a manually labeled validation sample.
+7. Create additional publication-ready figures for the strongest cross-platform findings.
+8. Build product-focused reporting outputs that connect rating changes, complaint categories, and potential product actions.
 
 A potential future workflow is:
 
@@ -585,7 +738,9 @@ Quality Validation
       ↓
 Matched Cross-Platform Analysis
       ↓
-Text / Sentiment Analysis
+Negative Review Issue Analysis
+      ↓
+Time / Version Analysis
       ↓
 Product & Business Insights
 ```
@@ -598,10 +753,14 @@ Product & Business Insights
 
 **Phase I Recommendation:** Google Play Store as the initial prototype source
 
-**Phase II:** In Progress – Large-scale Google Play and Apple App Store collection, matched dataset construction, and exploratory cross-platform analysis
+**Phase II Collection:** Completed – Large-scale Google Play and Apple App Store review collection
 
-**Current Analysis:** Data quality, paired same-app comparison, timestamp sensitivity, and category-level analysis
+**Matched Analysis Dataset:** Completed – 28 shared applications across 6 categories, with 13,599 reviews per platform
 
-**Current Dataset:** 28 shared applications across 6 categories, with 13,599 matched reviews per platform
+**Current Analysis:** Data quality, paired same-app comparison, timestamp sensitivity, category-level analysis, and negative-review issue analysis
 
-**Next Focus:** Deeper text-based issue analysis, timestamp-aligned comparisons, and product-oriented reporting
+**Issue Analysis:** Initial paired analysis completed for Venmo, Pandora, and Lyft
+
+**Current Figures:** Cross-platform negative-review issue profiles for Venmo, Pandora, and Lyft
+
+**Next Focus:** Expanding issue-level analysis, improving timestamp alignment, investigating version-level patterns, and developing product-oriented reporting
