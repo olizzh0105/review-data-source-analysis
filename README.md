@@ -1,13 +1,15 @@
 # Review Data Source Assessment and Cross-Platform Review Analysis
 
-This project evaluates and analyzes user-review data sources for downstream sentiment and product analysis.
+This project evaluates and analyzes user-review data sources for downstream sentiment, product-feedback, and business analysis.
 
 The project is organized into two phases:
 
 - **Phase I – Data Source Assessment:** evaluates Amazon, Google Play Store, and Apple App Store from business, technical, and practical perspectives.
 - **Phase II – Large-Scale Collection and Analysis:** builds matched Google Play Store and Apple App Store review datasets and conducts data-quality, app-level, category-level, and issue-level cross-platform analysis.
 
-Phase I identified Google Play Store as the strongest initial source for a recurring review-data workflow. Phase II expands the analysis by using both Google Play Store and Apple App Store in parallel to understand differences in ratings, review quality, metadata availability, review timing, and product-issue patterns.
+Phase I identified Google Play Store as the strongest initial source for a recurring review-data workflow.
+
+Phase II expands the project by using Google Play Store and Apple App Store in parallel to understand differences in ratings, review quality, metadata availability, review timing, and product-issue patterns.
 
 > [!NOTE]
 > **Phase I Recommendation: Google Play Store**
@@ -29,7 +31,7 @@ Phase I identified Google Play Store as the strongest initial source for a recur
 - [Phase II: Large-Scale Collection and Analysis](#phase-ii-large-scale-collection-and-analysis)
 - [Phase II Dataset](#phase-ii-dataset)
 - [Analysis Structure](#analysis-structure)
-- [Preliminary Findings](#preliminary-findings)
+- [Current Findings](#current-findings)
 - [Repository Structure](#repository-structure)
 - [Installation](#installation)
 - [Running the Project](#running-the-project)
@@ -58,7 +60,7 @@ Phase I focuses on determining whether each source offers:
 - A reasonably stable and repeatable collection process
 - Suitable structure for future automated ingestion
 
-Phase II then moves beyond source selection into large-scale collection and analytical comparison of Google Play Store and Apple App Store reviews.
+Phase II moves beyond source selection into large-scale collection and analytical comparison of Google Play Store and Apple App Store reviews.
 
 The full Phase I business and technical assessment is available in [`assessment.md`](./assessment.md).
 
@@ -75,6 +77,10 @@ The consolidated Phase II analytical findings are available in [`phase_ii_findin
 ### Phase II
 
 **How do review ratings, review quality, metadata, time coverage, and product-issue patterns differ between Google Play Store and Apple App Store for the same applications?**
+
+The issue-level extension also asks:
+
+**Which negative-review issues recur across platforms and applications, and which appear more category-, product-type-, or app-specific?**
 
 ---
 
@@ -263,6 +269,10 @@ Final matched analysis datasets:
 
 Matching review counts improves same-app comparability, but does **not** guarantee that the two platforms represent the same historical time window.
 
+For some applications, the same number of reviews represents substantially different periods across the two platforms.
+
+Timestamp coverage is therefore treated as a central robustness consideration throughout the analysis.
+
 ---
 
 ## Analysis Structure
@@ -310,33 +320,126 @@ Extends the analysis from ratings and review quality into product-issue analysis
 The notebook includes:
 
 - Negative-review extraction
-- Multi-label issue taxonomy development
-- Version 1 and Version 2 taxonomy comparison
-- Manual taxonomy refinement
+- Transparent multi-label issue taxonomy development
+- Version 1, Version 2, and Version 3 taxonomy refinement
+- Manual inspection of reviews classified as `Other`
 - Qualitative representative-review validation
 - Cross-platform issue-rate comparisons
-- Product-level analysis for Venmo, Pandora, and Lyft
-- Saved issue-profile visualizations
+- Timestamp-overlap diagnostics
+- Initial detailed analysis of Venmo, Pandora, and Lyft
+- Expanded analysis of Robinhood, Spotify, Slack, and Discord
+- Unified Version 3 classification across seven applications
+- Cross-app recurring-issue analysis
+- Comparison of recurring, category-related, product-type, and app-specific patterns
+- Saved app-level and summary visualizations
 
-The issue taxonomy is keyword-assisted and exploratory rather than a formally validated supervised classification model.
+The seven applications included in the expanded issue-level analysis are:
+
+- Venmo
+- Pandora
+- Lyft
+- Robinhood
+- Spotify
+- Slack
+- Discord
+
+The issue taxonomy is keyword-assisted, multi-label, manually refined, and exploratory rather than a formally validated supervised classification model.
 
 ---
 
-## Preliminary Findings
+## Current Findings
 
-Current Phase II analysis suggests:
+Current Phase II analysis suggests several distinct types of cross-platform patterns.
+
+### Rating and Review-Quality Findings
 
 - Cross-platform rating differences are highly application-specific and should not be interpreted using platform-wide averages alone.
 - Finance shows one of the more robust category-level Google-higher rating patterns after considering timestamp comparability.
-- Social & Community also shows consistently higher Google Play ratings, although substantial timestamp mismatch limits stronger interpretation.
+- Social & Community also shows consistently higher Google Play ratings, although timestamp mismatch limits stronger interpretation.
 - Apple App Store reviews are longer across all six study categories in the current matched sample.
 - Google Play contains a higher proportion of very short and repeated review text across all six categories.
 - Lower-rated reviews generally contain more detailed written feedback on both platforms.
 - Equal review counts can represent substantially different historical time windows across platforms.
 - Platform-specific metadata availability affects which downstream analyses are appropriate.
-- Issue-level analysis shows that cross-platform rating differences can reflect different underlying complaint structures.
 
-### Selected Issue-Level Findings
+### Seven-App Issue Analysis
+
+The expanded issue-level analysis shows substantial cross-platform agreement in the dominant complaint categories.
+
+Five of seven applications share **all three** of their top negative-review issue categories across Apple App Store and Google Play:
+
+- Discord
+- Lyft
+- Pandora
+- Slack
+- Venmo
+
+Robinhood and Spotify share two of their three dominant issue categories.
+
+This suggests that platform differences often affect the **relative concentration of complaints** rather than completely changing the underlying issue structure.
+
+### Recurring Cross-App Issues
+
+Several issue categories repeatedly appear among the dominant negative-review issues on both platforms.
+
+| Issue | Number of Apps | Applications |
+|---|---:|---|
+| Account / Access | 4 | Discord, Robinhood, Slack, Venmo |
+| Billing / Payment | 4 | Lyft, Robinhood, Spotify, Venmo |
+| Product Experience / Features | 3 | Discord, Pandora, Slack |
+| Technical / App Performance | 3 | Discord, Pandora, Slack |
+| Ads / Subscription | 2 | Pandora, Spotify |
+| Customer Support | 2 | Lyft, Venmo |
+| Service Provider / Fulfillment | 1 | Lyft |
+
+![Recurring Cross-Platform Issue Categories](figures/cross_app_issue_recurrence.png)
+
+### Cross-Platform Top-Issue Agreement
+
+The dominant complaint structure is highly consistent for most of the seven analyzed applications.
+
+![Cross-Platform Agreement in Top Negative Issues](figures/cross_platform_top_issue_agreement.png)
+
+### Potential Category- and Product-Type Patterns
+
+#### Finance
+
+Venmo and Robinhood both prominently feature:
+
+- Billing / Payment
+- Account / Access
+
+among their dominant cross-platform negative-review issues.
+
+This provides the clearest potential category-level recurring pattern in the current seven-app issue sample.
+
+#### Music & Audio
+
+Pandora and Spotify both prominently feature:
+
+- Ads / Subscription
+
+However, their other dominant complaint categories differ more substantially.
+
+Music & Audio therefore shows partial recurrence rather than a completely consistent issue structure.
+
+#### Communication and Collaboration Products
+
+Discord and Slack both prominently feature:
+
+- Product Experience / Features
+- Technical / App Performance
+- Account / Access
+
+They belong to different study categories, so this pattern is interpreted as recurrence across related product types rather than a formal category-level effect.
+
+#### Lyft
+
+Lyft remains the clearest service-model-specific case.
+
+`Service Provider / Fulfillment` dominates negative feedback on both Apple App Store and Google Play, reflecting the operational nature of ride-service delivery.
+
+### Selected App-Level Findings
 
 #### Lyft
 
@@ -355,7 +458,7 @@ This suggests that Lyft's dominant negative-feedback themes are broadly cross-pl
 
 #### Pandora
 
-Pandora shows the clearest difference in complaint composition.
+Pandora shows one of the clearest differences in complaint concentration.
 
 Google Play negative reviews contain more Technical / App Performance complaints:
 
@@ -372,7 +475,7 @@ Apple negative reviews contain more:
 | Product Experience / Features | 42.19% | 18.13% |
 | Billing / Payment | 18.75% | 10.36% |
 
-This suggests that dissatisfaction with Pandora may involve different underlying product problems across platforms.
+This suggests that the same application can share dominant complaint categories across platforms while still showing meaningful differences in issue concentration.
 
 #### Venmo
 
@@ -389,15 +492,32 @@ However, Apple negative reviews contain relatively more Account / Access, Custom
 
 This suggests that Venmo's rating gap may reflect different concentrations of similar underlying problems rather than completely different issue types.
 
+### Timestamp Robustness in the Expanded Sample
+
+Timestamp overlap was evaluated before interpreting the four newly added applications.
+
+Robinhood and Slack provide the strongest comparison cases.
+
+- Robinhood: 73.06% of the Apple review window overlaps with Google, while 99.83% of the Google window overlaps with Apple.
+- Slack: 67.91% of the Apple review window overlaps with Google, while the Google window is fully contained within the Apple window.
+
+Discord has moderate comparability.
+
+Spotify has the weakest overlap and is therefore treated as a more exploratory comparison.
+
+These checks reinforce the importance of evaluating issue differences together with review timing rather than attributing observed differences directly to platform effects.
+
 ### Business Relevance
 
-The analysis suggests that platform choice may affect both observed sentiment and the amount and type of diagnostic information available in individual reviews.
+The analysis suggests that platform choice may affect:
 
-Apple reviews generally provide more written context, while Google Play contains more short and repeated feedback and may require stronger preprocessing for text analysis.
+- Observed sentiment
+- Review richness
+- Issue concentration
+- Metadata availability
+- Historical time coverage
 
-Issue-level analysis also shows that rating differences alone do not explain whether two platforms reflect the same product problems.
-
-For product teams, the most useful workflow is therefore:
+The strongest current analytical workflow is therefore:
 
 ```text
 Same Application
@@ -408,17 +528,23 @@ Rating + Review Quality + Time Coverage
       ↓
 Negative Review Issues
       ↓
+Recurring vs App-Specific Patterns
+      ↓
 Product Interpretation
 ```
 
-These findings are descriptive and should not be interpreted as causal platform effects.
+If the same dominant issues appear across both platforms, the issue may represent a broader product concern.
+
+If complaint concentration or composition differs substantially, platform-specific feedback may warrant separate investigation.
+
+These findings are descriptive and exploratory and should not be interpreted as causal platform effects.
 
 ---
 
 ## Repository Structure
 
 ```text
-review-data-source-assessment/
+review-data-source-analysis/
 │
 ├── README.md
 ├── assessment.md
@@ -446,7 +572,9 @@ review-data-source-assessment/
 ├── figures/
 │   ├── venmo_negative_issue_profile.png
 │   ├── pandora_negative_issue_profile.png
-│   └── lyft_negative_issue_profile.png
+│   ├── lyft_negative_issue_profile.png
+│   ├── cross_app_issue_recurrence.png
+│   └── cross_platform_top_issue_agreement.png
 │
 └── data/
     ├── raw/
@@ -477,7 +605,17 @@ Documents the Phase II sampling strategy, selected applications, expected fields
 
 #### `phase_ii_findings.md`
 
-Consolidates the main Phase II analytical findings across data quality, paired same-app comparisons, category-level patterns, negative-review issue analysis, business implications, limitations, and recommended next steps.
+Consolidates the main Phase II analytical findings across:
+
+- Data quality
+- Paired same-app comparisons
+- Category-level patterns
+- Negative-review issue analysis
+- Expanded seven-app issue analysis
+- Timestamp robustness
+- Business implications
+- Limitations
+- Recommended next steps
 
 #### `scripts/`
 
@@ -505,19 +643,30 @@ Examines category-level consistency, timestamp sensitivity, and review-quality p
 
 #### `notebooks/04_text_issue_analysis.ipynb`
 
-Performs exploratory multi-label issue analysis of negative reviews for selected paired applications.
+Performs exploratory multi-label negative-review issue analysis.
 
-It includes taxonomy development, manual refinement, representative-review validation, cross-platform issue-rate comparisons, and product-level interpretation.
+It includes:
+
+- Taxonomy development and refinement
+- Version 1, Version 2, and Version 3 classifications
+- Manual `Other` review inspection
+- Representative-review validation
+- Seven-app cross-platform analysis
+- Timestamp-overlap diagnostics
+- Cross-app issue recurrence
+- Product-level interpretation
 
 #### `figures/`
 
-Contains saved Phase II visualizations.
+Contains saved Phase II issue-analysis visualizations.
 
-Current issue-profile figures include:
+Current figures include:
 
 - `venmo_negative_issue_profile.png`
 - `pandora_negative_issue_profile.png`
 - `lyft_negative_issue_profile.png`
+- `cross_app_issue_recurrence.png`
+- `cross_platform_top_issue_agreement.png`
 
 #### `data/raw/`
 
@@ -635,6 +784,12 @@ Category-Level Analysis
       ↓
 Negative Review Issue Analysis
       ↓
+Taxonomy Refinement
+      ↓
+Seven-App Cross-Platform Comparison
+      ↓
+Recurring vs App-Specific Patterns
+      ↓
 Product / Business Interpretation
 ```
 
@@ -658,11 +813,13 @@ Amazon remains an attractive future source because of its broad product coverage
 
 Apple App Store remains an analytically valuable complementary source, particularly because of the richer review text and highly complete application-version information observed in the current dataset.
 
+The Phase II findings therefore do not support selecting one app-review platform as universally superior for analytical purposes.
+
 ---
 
 ## Limitations
 
-The project has progressed from an initial feasibility assessment into large-scale exploratory analysis, but several limitations remain.
+The project has progressed from an initial feasibility assessment into large-scale exploratory and issue-level analysis, but several limitations remain.
 
 ### Collection Limitations
 
@@ -693,39 +850,71 @@ The finding that Apple reviews are longer should therefore be interpreted as a c
 - Repeated review text is not automatically treated as duplicate data because different users may independently submit identical short comments.
 - Low-information thresholds such as reviews with 20 characters or fewer are exploratory analytical definitions rather than formal quality standards.
 
+### Timestamp Limitation
+
+Equal review counts do not guarantee equivalent historical coverage.
+
+Timestamp-overlap analysis improves interpretation but does not completely eliminate differences in review timing.
+
+Cross-platform issue-rate or rating differences may therefore partly reflect different product periods.
+
+Applications with weaker overlap, such as Spotify in the expanded issue sample, are interpreted more cautiously.
+
 ### Issue-Taxonomy Limitations
 
-The negative-review issue taxonomy is:
+The Version 3 negative-review issue taxonomy is:
 
 - Keyword-assisted
 - Multi-label
 - Manually refined
+- Application-aware
 - Exploratory
 
-Representative reviews were manually inspected to confirm that major categories generally reflected the intended meaning of the review text.
+Representative reviews and reviews initially classified as `Other` were manually inspected during taxonomy development.
 
-However, the taxonomy has not been evaluated using a manually labeled holdout dataset and does not have formal precision, recall, or F1 measurements.
+The taxonomy improved coverage across the seven selected applications, but several limitations remain:
+
+- Classification rules were developed using the same review sample being analyzed.
+- App-specific keywords were added after inspection of recurring complaint language.
+- Some applications retain substantial `Other` rates.
+- Slack remains particularly weakly represented by the current taxonomy.
+- A single review may receive multiple labels.
+- The taxonomy has not been evaluated using an independently labeled validation dataset.
+- Formal precision, recall, and F1 measurements have not been calculated.
 
 Issue rates should therefore be interpreted as **directional analytical evidence rather than validated population prevalence estimates**.
-
-These limitations are considered throughout the paired-app, category-level, and issue-level analyses.
 
 ---
 
 ## Next Steps
 
-The next stage of the project will build on the completed Phase II descriptive and initial issue-level analysis.
+The next stage of the project should deepen and validate the issue-level analysis already completed rather than simply expanding the number of applications.
 
-Potential next steps include:
+Recommended priorities are:
 
-1. Expand negative-review issue analysis beyond Venmo, Pandora, and Lyft to additional high-value paired applications.
-2. Improve timestamp alignment by comparing reviews from the same calendar periods across platforms.
-3. Examine whether rating and issue patterns change around application-version releases.
-4. Analyze Google Play developer-response behavior where metadata is available.
-5. Develop more systematic platform-specific preprocessing rules for short, repetitive, or low-information reviews.
-6. Evaluate the issue taxonomy against a manually labeled validation sample.
-7. Create additional publication-ready figures for the strongest cross-platform findings.
-8. Build product-focused reporting outputs that connect rating changes, complaint categories, and potential product actions.
+1. **Consolidate the seven-app issue findings**
+   - Continue distinguishing cross-platform-consistent, recurring cross-app, category-related, product-type, and app-specific patterns.
+
+2. **Validate the Version 3 taxonomy**
+   - Build a manually labeled review sample.
+   - Compare human labels with the keyword-assisted classification.
+   - Evaluate precision, recall, F1, and multi-label agreement.
+
+3. **Improve timestamp alignment**
+   - Repeat selected comparisons using the same calendar periods where possible.
+   - Prioritize stronger comparison cases such as Robinhood and Slack.
+
+4. **Expand issue analysis selectively**
+   - Add applications only when they help test a specific recurring or category-level pattern.
+
+5. **Investigate version-level patterns**
+   - Examine rating and issue changes around application releases where version metadata is sufficiently complete.
+
+6. **Analyze Google Play developer responses**
+   - Examine response rates, timing, and issue types where response metadata is available.
+
+7. **Develop product-focused reporting**
+   - Convert the strongest analytical findings into concise summaries and publication-ready visualizations.
 
 A potential future workflow is:
 
@@ -740,10 +929,14 @@ Matched Cross-Platform Analysis
       ↓
 Negative Review Issue Analysis
       ↓
-Time / Version Analysis
+Taxonomy Validation
+      ↓
+Time / Version Robustness
       ↓
 Product & Business Insights
 ```
+
+The immediate analytical priority is therefore **robustness and validation**, not broad uncontrolled expansion.
 
 ---
 
@@ -757,10 +950,30 @@ Product & Business Insights
 
 **Matched Analysis Dataset:** Completed – 28 shared applications across 6 categories, with 13,599 reviews per platform
 
-**Current Analysis:** Data quality, paired same-app comparison, timestamp sensitivity, category-level analysis, and negative-review issue analysis
+**Data Quality Analysis:** Completed
 
-**Issue Analysis:** Initial paired analysis completed for Venmo, Pandora, and Lyft
+**Paired Same-App Analysis:** Completed
 
-**Current Figures:** Cross-platform negative-review issue profiles for Venmo, Pandora, and Lyft
+**Category-Level Analysis:** Completed
 
-**Next Focus:** Expanding issue-level analysis, improving timestamp alignment, investigating version-level patterns, and developing product-oriented reporting
+**Initial Issue Analysis:** Completed for Venmo, Pandora, and Lyft
+
+**Expanded Issue Analysis:** Completed for Robinhood, Spotify, Slack, and Discord
+
+**Unified Issue Taxonomy:** Version 3 applied across all seven selected applications
+
+**Timestamp Robustness:** Overlap diagnostics completed for the expanded issue-analysis sample
+
+**Cross-App Recurrence Analysis:** Completed – recurring and app-specific issue patterns identified across seven applications
+
+**Current Figures:**
+
+- Venmo negative-review issue profile
+- Pandora negative-review issue profile
+- Lyft negative-review issue profile
+- Cross-app issue recurrence
+- Cross-platform top-issue agreement
+
+**Current Analytical Focus:** Validating the Version 3 taxonomy, improving timestamp alignment for selected comparisons, and translating recurring and app-specific findings into product-focused reporting
+
+**Secondary Future Analysis:** Version-level patterns and Google Play developer-response analysis
