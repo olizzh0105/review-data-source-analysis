@@ -751,6 +751,130 @@ This type of analysis can help product teams decide whether an issue should be t
 
 The issue rates are exploratory and should be interpreted as directional evidence rather than validated population prevalence estimates.
 
+### Expanded Seven-App Issue Analysis
+
+Following the initial Venmo, Pandora, and Lyft analysis, the issue-level analysis was extended to four additional applications:
+
+- Robinhood
+- Spotify
+- Slack
+- Discord
+
+The purpose of the expansion was not to analyze every application in the dataset, but to test which issue patterns recur across applications and which appear more application-specific.
+
+#### Timestamp Robustness
+
+Before comparing issue composition, review-window overlap was evaluated for the four additional applications.
+
+Robinhood and Slack provide the strongest cross-platform comparison cases:
+
+- Robinhood: 73.06% of the Apple review window overlaps with Google, while 99.83% of the Google window overlaps with Apple.
+- Slack: 67.91% of the Apple review window overlaps with Google, while the Google window is fully contained within the Apple window.
+
+Discord has moderate comparability:
+
+- 31.45% of the Apple window overlaps with Google.
+- 95.43% of the Google window overlaps with Apple.
+
+Spotify has the weakest timestamp comparability:
+
+- 27.26% of the Apple window overlaps with Google.
+- 72.90% of the Google window overlaps with Apple.
+
+Robinhood and Slack are therefore treated as stronger comparison cases, while Discord and especially Spotify require greater caution in cross-platform interpretation.
+
+#### Taxonomy Expansion
+
+The existing Version 2 issue taxonomy was first applied to the four additional applications.
+
+Manual inspection of reviews classified as `Other` revealed recurring product-specific themes that were not sufficiently captured by the existing taxonomy.
+
+A Version 3 taxonomy was therefore created while preserving earlier versions for traceability.
+
+Version 3 added targeted rules for recurring themes such as:
+
+- Robinhood trading restrictions, order execution, deposits, and margins
+- Spotify shuffle behavior, repeated songs, subscriptions, and playback issues
+- Slack notifications, threads, messaging workflow, and interface usability
+- Discord interface changes, messaging controls, uploads, and audio/device issues
+
+Version 3 reduced the share of reviews classified only as `Other` across all four applications.
+
+| App | Apple V2 Other | Apple V3 Other | Google V2 Other | Google V3 Other |
+|---|---:|---:|---:|---:|
+| Discord | 38.31% | 20.34% | 44.97% | 32.54% |
+| Robinhood | 28.57% | 17.23% | 36.87% | 28.28% |
+| Slack | 63.10% | 45.24% | 64.47% | 53.29% |
+| Spotify | 39.13% | 26.09% | 37.74% | 32.08% |
+
+Slack remains the least completely represented application in the taxonomy, so its issue-level findings are interpreted more cautiously.
+
+#### Cross-Platform Agreement
+
+After applying a unified Version 3 taxonomy across all seven analyzed applications, substantial agreement appears in the dominant negative-review issue categories across Apple App Store and Google Play.
+
+Five of seven applications share all three of their top negative-review issue categories across platforms:
+
+- Discord
+- Lyft
+- Pandora
+- Slack
+- Venmo
+
+Robinhood and Spotify share two of their three dominant issue categories.
+
+This suggests that platform differences often affect the relative concentration of complaints rather than completely changing the underlying issue structure.
+
+#### Recurring Cross-App Issues
+
+Several issue categories recur across multiple applications as shared dominant concerns on both platforms.
+
+| Issue | Number of Apps | Applications |
+|---|---:|---|
+| Account / Access | 4 | Discord, Robinhood, Slack, Venmo |
+| Billing / Payment | 4 | Lyft, Robinhood, Spotify, Venmo |
+| Product Experience / Features | 3 | Discord, Pandora, Slack |
+| Technical / App Performance | 3 | Discord, Pandora, Slack |
+| Ads / Subscription | 2 | Pandora, Spotify |
+| Customer Support | 2 | Lyft, Venmo |
+| Service Provider / Fulfillment | 1 | Lyft |
+
+#### Potential Category- and Product-Type Patterns
+
+Finance provides the clearest potential category-level recurring pattern in the current sample.
+
+Both Venmo and Robinhood prominently feature:
+
+- Billing / Payment
+- Account / Access
+
+among their dominant cross-platform negative-review issues.
+
+Music & Audio shows partial recurrence. Both Pandora and Spotify prominently feature Ads / Subscription complaints, while their other dominant issue categories differ more substantially.
+
+Discord and Slack show similar recurring concerns involving:
+
+- Product Experience / Features
+- Technical / App Performance
+- Account / Access
+
+Although they belong to different study categories, this suggests a recurring pattern across related communication and collaboration products.
+
+Lyft remains the clearest app- or service-model-specific case, with Service Provider / Fulfillment dominating negative feedback on both platforms.
+
+#### Expanded Analysis Takeaway
+
+The seven-app analysis suggests that the dominant structure of negative feedback is often relatively stable across platforms.
+
+Cross-platform differences therefore appear to operate in at least two ways:
+
+1. The same core problems may appear on both platforms but at different concentrations.
+2. Some applications may show more meaningful differences in complaint composition across platforms.
+
+For product teams, this distinction matters because repeated issue categories across both platforms may indicate broader product concerns, while platform-specific concentrations may warrant more targeted investigation.
+
+These findings remain descriptive and exploratory and should not be interpreted as causal platform effects.
+
 ## 6. Category-Level Findings
 
 ### 6.1 Why Category-Level Analysis Matters
@@ -1475,29 +1599,45 @@ Possible contributing factors include:
 
 The analysis therefore identifies patterns that may warrant further investigation rather than causal relationships.
 
-### 8.10 Current Analysis Does Not Yet Examine Review Topics
+### 8.10 Issue Classification Remains Exploratory
 
-The current Phase II analysis focuses primarily on:
+The current Phase II analysis now includes systematic negative-review issue classification for seven selected applications:
 
-- Ratings
-- Review length
-- Data quality
-- Metadata
-- Timestamp coverage
-- Cross-platform differences
+- Venmo
+- Pandora
+- Lyft
+- Robinhood
+- Spotify
+- Slack
+- Discord
 
-It does not yet systematically identify the specific product issues discussed inside the review text.
+The analysis uses a transparent, multi-label, keyword-assisted taxonomy that was iteratively refined through manual inspection of reviews classified as `Other`.
 
-For example, the current analysis may identify that Venmo has a large number of detailed negative Apple reviews, but it does not yet determine whether those reviews are primarily about:
+The taxonomy captures recurring issue categories such as:
 
-- Payments
-- Account access
-- Verification
-- Fees
-- Application crashes
-- Customer service
+- Billing / Payment
+- Account / Access
+- Customer Support
+- Technical / App Performance
+- Product Experience / Features
+- Ads / Subscription
+- Service Provider / Fulfillment
+- Core Service Failure
 
-This represents one of the most important opportunities for the next analytical stage.
+However, the taxonomy remains exploratory rather than formally validated.
+
+Important limitations include:
+
+- The classification rules were developed using the same review sample being analyzed.
+- App-specific keywords were added after manual inspection of recurring complaint language.
+- Some reviews remain classified as `Other`, particularly for applications such as Slack.
+- A single review may contain multiple issues and therefore receive multiple labels.
+- The taxonomy has not been evaluated against an independently labeled validation dataset.
+- Precision, recall, F1 score, and other formal classification metrics have not been calculated.
+
+The issue-frequency results should therefore be interpreted as directional evidence about recurring complaint patterns rather than precise estimates of issue prevalence.
+
+A future extension could evaluate the taxonomy against a manually labeled holdout sample or compare the rule-based results with a supervised or embedding-based classification approach.
 
 ### 8.11 Overall Limitation Takeaway
 
@@ -1512,93 +1652,97 @@ The current findings are best viewed as:
 
 ## 9. Recommended Next Steps
 
-### 9.1 Prioritize Text-Based Analysis
+### 9.1 Consolidate the Seven-App Issue Findings
 
-The highest-value next step is to move from describing review structure to understanding **what users are actually discussing**.
-
-The current analysis identifies where negative and information-rich reviews are concentrated.
-
-The next stage should examine the content of those reviews using methods such as:
-
-- Sentiment analysis
-- Keyword extraction
-- Topic classification
-- Issue clustering
-- Pain-point identification
-- Feature-level feedback analysis
-
-A practical starting point would be to focus on detailed negative reviews because they contain substantially more text than highly positive reviews.
-
-### 9.2 Build an Issue Taxonomy
-
-Before applying more advanced models, the project could develop a simple issue taxonomy for selected applications.
-
-For example:
-
-```text
-Negative Review
-      ↓
-Issue Category
-      ↓
-Bug / Performance
-Billing / Payment
-Account Access
-Feature Request
-User Experience
-Customer Support
-Other
-```
-
-This would transform unstructured review text into categories that are more directly actionable for product teams.
-
-The taxonomy could first be tested manually on a smaller sample and later scaled using automated classification.
-
-### 9.3 Analyze High-Gap Applications First
-
-The paired-app analysis already identifies applications with particularly large or analytically interesting differences.
-
-Potential priority cases include:
+The current issue-level analysis now covers seven applications:
 
 - Venmo
 - Pandora
 - Lyft
-- Airbnb
-- Microsoft OneDrive
-- PayPal
-- YouTube Music
+- Robinhood
+- Spotify
+- Slack
+- Discord
 
-However, apps with extreme timestamp mismatch should be treated carefully.
+The next step is to consolidate the strongest findings into a smaller set of recurring patterns that are easy to interpret across applications and platforms.
 
-Venmo, Pandora, and Lyft are especially useful candidates because they combine meaningful rating differences with relatively more comparable historical coverage.
+The main analytical distinction should remain:
 
-These applications provide a practical starting point for deeper review-content analysis.
+```text
+Cross-Platform Consistent
+        ↓
+Recurring Across Related Apps
+        ↓
+Category- or Product-Type Specific
+        ↓
+App-Specific
+```
 
-### 9.4 Compare Product Issues Across Platforms
+For example:
 
-For the same application, the next stage could test whether users complain about the same issues on both platforms.
+- Billing / Payment and Account / Access recur across the Finance applications Venmo and Robinhood.
+- Ads / Subscription appears as a recurring issue across Pandora and Spotify.
+- Product Experience / Features and Technical / App Performance recur across Discord and Slack.
+- Service Provider / Fulfillment remains strongly associated with Lyft's ride-service model.
+
+This framework provides a clearer way to translate issue-level results into product and business interpretation.
+
+### 9.2 Strengthen Taxonomy Validation
+
+The current Version 3 taxonomy has improved coverage across both the original and expanded application samples, but it remains exploratory.
+
+A stronger validation step would create a manually labeled review sample and compare human-assigned labels with the keyword-assisted taxonomy.
+
+Possible evaluation measures include:
+
+- Precision
+- Recall
+- F1 score
+- Multi-label agreement
+- Error analysis by application and issue category
+
+This would help distinguish genuine recurring complaint patterns from classification artifacts.
+
+The current taxonomy should continue to be preserved with version history so that changes remain traceable.
+
+### 9.3 Expand Issue Analysis Selectively
+
+The issue analysis does not need to be expanded to all 28 applications immediately.
+
+Additional applications should be selected only when they help answer a specific analytical question.
+
+Useful selection criteria include:
+
+- Strong timestamp comparability
+- Sufficient negative-review volume
+- Representation of an underexplored category
+- Ability to test whether an observed issue pattern recurs beyond the current sample
+
+The objective should be to improve evidence for recurring, category-specific, and app-specific patterns rather than simply increasing the number of applications analyzed.
+
+### 9.4 Compare Issue Concentration Within More Comparable Time Windows
+
+The seven-app analysis shows that dominant issue categories are often similar across platforms, but the relative concentration of those issues can differ.
+
+A useful next step is to repeat selected issue comparisons using more closely aligned review windows.
 
 For example:
 
 ```text
-Venmo Apple Negative Reviews
-             vs
-Venmo Google Negative Reviews
+Same Application
+        ↓
+Same Calendar Period
+        ↓
+Apple vs Google Issue Rates
+        ↓
+Compare Issue Concentration
 ```
 
-Questions could include:
+This would help determine whether observed platform differences remain after reducing timestamp mismatch.
 
-- Are the same problems discussed on both platforms?
-- Are certain issues disproportionately represented on one platform?
-- Are platform-specific technical problems visible?
-- Do rating differences correspond to different complaint categories?
+Priority cases should include applications with strong analytical value and relatively good overlap, such as Robinhood and Slack.
 
-This would move the analysis from:
-
-**"Which platform is more negative?"**
-
-to:
-
-**"Why is one platform more negative for this application?"**
+Applications with weaker overlap, such as Spotify, should continue to be treated as more exploratory comparisons.
 
 ### 9.5 Align Samples by Time Period
 
@@ -1760,25 +1904,33 @@ This would make future refreshes of the analysis easier and reduce manual work.
 
 ### 9.12 Recommended Priority Order
 
-Based on the current Phase II findings, the recommended sequence is:
+Based on the current Phase II findings, the recommended next sequence is:
 
 ```text
-1. Finalize Phase II descriptive findings
+1. Consolidate the seven-app issue findings
         ↓
-2. Select high-value paired applications
+2. Validate the Version 3 taxonomy with a manually labeled sample
         ↓
-3. Perform negative-review topic / issue analysis
+3. Repeat selected comparisons using better-aligned time windows
         ↓
-4. Compare issue patterns across platforms
+4. Expand issue analysis selectively to additional high-value apps
         ↓
-5. Improve timestamp alignment
+5. Investigate version-level patterns where metadata coverage is sufficient
         ↓
-6. Add version-level and developer-response analysis
+6. Analyze developer-response behavior on Google Play
         ↓
 7. Build product-focused reporting outputs
 ```
 
-This sequence builds directly on the current evidence while avoiding unnecessary expansion before the strongest findings are fully understood.
+This sequence builds on the issue-level analysis already completed rather than restarting the analytical workflow.
+
+The immediate priorities are therefore:
+
+- strengthening confidence in the current taxonomy,
+- testing whether issue-rate differences remain under improved timestamp alignment, and
+- translating recurring, category-specific, and app-specific patterns into clearer product insights.
+
+Version-level and developer-response analyses remain secondary extensions and should be pursued only where the available metadata is sufficiently complete.
 
 ### 9.13 Final Recommendation
 
@@ -1804,6 +1956,17 @@ Apple App Store
 
 The recommended long-term approach is therefore not to select one platform universally.
 
-Instead, the project should use **both sources where possible**, apply platform-specific quality controls, align time periods for comparison, and prioritize the review source that best answers the product question being investigated.
+Instead, the project should use both sources where possible, apply platform-specific quality controls, align time periods for comparison, and prioritize the review source that best answers the product question being investigated.
 
-The next analytical phase should focus on converting detailed review text—especially negative reviews—into specific product issues and actionable business insights.
+The completed issue-level analysis also shows that the same application often shares its dominant complaint categories across platforms, even when issue frequencies or rating levels differ.
+
+This means the most useful future work is not simply to collect more reviews or expand to more applications.
+
+The next analytical priorities should be to:
+
+- validate the current issue taxonomy,
+- strengthen timestamp alignment for selected app comparisons,
+- investigate version-level patterns where metadata is sufficiently complete, and
+- translate the strongest recurring and app-specific findings into concise product-focused reporting.
+
+Overall, the project has progressed from evaluating review-source feasibility to identifying which review signals are most useful for product diagnosis and cross-platform decision-making.
